@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/goToNotification"
+        android:title="Go to Notification Page"
+        android:icon="@drawable/icon_notification"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/goToSetting"
+        android:title="Go to Setting Page"
+        android:icon="@drawable/icon_setting"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/goToLogin"
+        android:title="Go to Login Page"
+        android:icon="@drawable/icon_login"
+        app:showAsAction="ifRoom"/>
+
+</menu>
