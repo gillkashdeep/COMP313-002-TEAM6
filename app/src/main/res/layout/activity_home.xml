@@ -89,20 +89,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTime1Home"
+                android:id="@+id/tvTime0Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="21:00"
                 android:textAlignment="center" />
 
             <ImageView
-                android:id="@+id/ivTime1WeatherHome"
+                android:id="@+id/ivTime0WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:src="@drawable/icon_testweather" />
 
             <TextView
-                android:id="@+id/tvTime1WeatherHome"
+                android:id="@+id/tvTime0WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="14°C"
@@ -116,20 +116,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTime2Home"
+                android:id="@+id/tvTime1Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="00:00"
                 android:textAlignment="center" />
 
             <ImageView
-                android:id="@+id/ivTime2WeatherHome"
+                android:id="@+id/ivTime1WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:src="@drawable/icon_testweather" />
 
             <TextView
-                android:id="@+id/tvTime2WeatherHome"
+                android:id="@+id/tvTime1WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="12°C"
@@ -143,20 +143,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTime3Home"
+                android:id="@+id/tvTime2Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="03:00"
                 android:textAlignment="center" />
 
             <ImageView
-                android:id="@+id/ivTime3WeatherHome"
+                android:id="@+id/ivTime2WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:src="@drawable/icon_testweather" />
 
             <TextView
-                android:id="@+id/tvTime3WeatherHome"
+                android:id="@+id/tvTime2WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10°C"
@@ -170,20 +170,20 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvTime4Home"
+                android:id="@+id/tvTime3Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="06:00"
                 android:textAlignment="center" />
 
             <ImageView
-                android:id="@+id/ivTime4WeatherHome"
+                android:id="@+id/ivTime3WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="32dp"
                 android:src="@drawable/icon_testweather" />
 
             <TextView
-                android:id="@+id/tvTime4WeatherHome"
+                android:id="@+id/tvTime3WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="10°C"
