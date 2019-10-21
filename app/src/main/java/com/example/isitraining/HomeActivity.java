@@ -16,6 +16,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -87,7 +88,9 @@ public class HomeActivity extends AppCompatActivity {
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
 
+                    // set current weather data to views
                     tvCityHome.setText(city);
+                    Picasso.get().load(iconURLCurrentWeather).into(ivPresentWeatherHome);
                     tvTemHome.setText(tempCurrentWeather);
                     tvPresentWeatherHome.setText(currentWeather);
 
