@@ -146,6 +146,12 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intentNoti = new Intent(this,NotificationActivity.class);
                 startActivity(intentNoti);
                 break;
+            case R.id.goToSetting:
+                Intent intentSet = new Intent(this,SettingActivity.class);
+                startActivity(intentSet);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
         return true;
     }
