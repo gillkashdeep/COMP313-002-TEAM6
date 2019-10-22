@@ -281,7 +281,6 @@ public class HomeActivity extends AppCompatActivity {
 
     // 5 days forecast method
     public void get5DaysForecast(){
-
         // initiate calendar and date formats
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -301,7 +300,26 @@ public class HomeActivity extends AppCompatActivity {
         final String dateDay2 = dateFormat.format(day2Date);
         final String day2 = dayFormat.format(day2Date);
 
-        tvDay2Home.setText(day2);
+        // get day3's date
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date day3Date = cal.getTime();
+        // make them to string
+        final String dateDay3 = dateFormat.format(day3Date);
+        final String day3 = dayFormat.format(day3Date);
+
+        // get day4's date
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date day4Date = cal.getTime();
+        // make them to string
+        final String dateDay4 = dateFormat.format(day4Date);
+        final String day4 = dayFormat.format(day4Date);
+
+        // get day5's date
+        cal.add(Calendar.DAY_OF_YEAR, 1);
+        Date day5Date = cal.getTime();
+        // make them to string
+        final String dateDay5 = dateFormat.format(day5Date);
+        final String day5 = dayFormat.format(day5Date);
 
         // In the future iteration it will be changed to user chosen City
         String toronto5DaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
@@ -314,12 +332,29 @@ public class HomeActivity extends AppCompatActivity {
                     // get list array from toronto3HoursForecastJson
                     JSONArray listArrayJson = response.getJSONArray("list");
 
-                    // initiate temMin and temMax arraylist
+                    // initiate temMin and temMax array lists
                     ArrayList<Double> tempMinArrayDay1 = new ArrayList<>();
                     ArrayList<Double> tempMaxArrayDay1 = new ArrayList<>();
 
-                    // day1 weather icon URL string
+                    ArrayList<Double> tempMinArrayDay2 = new ArrayList<>();
+                    ArrayList<Double> tempMaxArrayDay2 = new ArrayList<>();
+
+                    ArrayList<Double> tempMinArrayDay3 = new ArrayList<>();
+                    ArrayList<Double> tempMaxArrayDay3 = new ArrayList<>();
+
+                    ArrayList<Double> tempMinArrayDay4 = new ArrayList<>();
+                    ArrayList<Double> tempMaxArrayDay4 = new ArrayList<>();
+
+                    ArrayList<Double> tempMinArrayDay5 = new ArrayList<>();
+                    ArrayList<Double> tempMaxArrayDay5 = new ArrayList<>();
+
+                    // day1`5 weather icon URL string
                     String iconURLWeatherDay1 = "";
+                    String iconURLWeatherDay2 = "";
+                    String iconURLWeatherDay3 = "";
+                    String iconURLWeatherDay4 = "";
+                    String iconURLWeatherDay5 = "";
+
 
                     // check every object in the Json list array
                     for(int i = 0; i < listArrayJson.length(); i++){
@@ -344,17 +379,97 @@ public class HomeActivity extends AppCompatActivity {
                             // select the last icon url of day1 objects
                             iconURLWeatherDay1 = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                         }
+
+                        // if date in this object is equal to day2 date, store max and min temp to the array lists
+                        if(dateObject.equals(dateDay2)){
+                            double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
+                            double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+                            tempMinArrayDay2.add(tempMin);
+                            tempMaxArrayDay2.add(tempMax);
+
+                            // select the last icon url of day2 objects
+                            iconURLWeatherDay2 = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
+                        }
+
+                        // if date in this object is equal to day3 date, store max and min temp to the array lists
+                        if(dateObject.equals(dateDay3)){
+                            double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
+                            double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+                            tempMinArrayDay3.add(tempMin);
+                            tempMaxArrayDay3.add(tempMax);
+
+                            // select the last icon url of day3 objects
+                            iconURLWeatherDay3 = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
+                        }
+
+                        // if date in this object is equal to day4 date, store max and min temp to the array lists
+                        if(dateObject.equals(dateDay4)){
+                            double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
+                            double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+                            tempMinArrayDay4.add(tempMin);
+                            tempMaxArrayDay4.add(tempMax);
+
+                            // select the last icon url of day4 objects
+                            iconURLWeatherDay4 = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
+                        }
+
+                        // if date in this object is equal to day5 date, store max and min temp to the array lists
+                        if(dateObject.equals(dateDay5)){
+                            double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
+                            double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+                            tempMinArrayDay5.add(tempMin);
+                            tempMaxArrayDay5.add(tempMax);
+
+                            // select the last icon url of day5 objects
+                            iconURLWeatherDay5 = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
+                        }
                     }
 
                     // choose the minTemp and maxTemp in minTemp / maxTemp Arrays
                     int tempMinDay1 = Collections.min(tempMinArrayDay1).intValue();
                     int tempMaxDay1 = Collections.max(tempMaxArrayDay1).intValue();
 
+                    int tempMinDay2 = Collections.min(tempMinArrayDay2).intValue();
+                    int tempMaxDay2 = Collections.max(tempMaxArrayDay2).intValue();
+
+                    int tempMinDay3 = Collections.min(tempMinArrayDay3).intValue();
+                    int tempMaxDay3 = Collections.max(tempMaxArrayDay3).intValue();
+
+                    int tempMinDay4 = Collections.min(tempMinArrayDay4).intValue();
+                    int tempMaxDay4 = Collections.max(tempMaxArrayDay4).intValue();
+
+                    int tempMinDay5 = Collections.min(tempMinArrayDay5).intValue();
+                    int tempMaxDay5 = Collections.max(tempMaxArrayDay5).intValue();
+
                     // set day1 data to views
                     tvDay1Home.setText(day1);
                     Picasso.get().load(iconURLWeatherDay1).into(ivDay1Weather);
                     tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
                     tvDay1LowTemHome.setText(tempMinDay1 + "°C");
+
+                    // set day2 data to views
+                    tvDay2Home.setText(day2);
+                    Picasso.get().load(iconURLWeatherDay2).into(ivDay2Weather);
+                    tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+                    tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+
+                    // set day3 data to views
+                    tvDay3Home.setText(day3);
+                    Picasso.get().load(iconURLWeatherDay3).into(ivDay3Weather);
+                    tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+                    tvDay3LowTemHome.setText(tempMinDay3 + "°C");
+
+                    // set day4 data to views
+                    tvDay4Home.setText(day4);
+                    Picasso.get().load(iconURLWeatherDay4).into(ivDay4Weather);
+                    tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+                    tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+
+                    // set day5 data to views
+                    tvDay5Home.setText(day5);
+                    Picasso.get().load(iconURLWeatherDay5).into(ivDay5Weather);
+                    tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+                    tvDay5LowTemHome.setText(tempMinDay5 + "°C");
 
 
                 }catch (JSONException e){
