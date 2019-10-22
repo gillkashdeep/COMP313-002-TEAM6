@@ -3,9 +3,12 @@ package com.example.isitraining;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
@@ -133,6 +136,17 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case R.id.goToNotification:
+                Intent intentNoti = new Intent(this,NotificationActivity.class);
+                startActivity(intentNoti);
+                break;
+        }
         return true;
     }
 
