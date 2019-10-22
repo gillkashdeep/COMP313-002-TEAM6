@@ -20,7 +20,7 @@
             android:id="@+id/tvDateHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
             android:text="Oct 20 | Sun"
             android:textAlignment="center" />
@@ -92,6 +92,7 @@
                 android:id="@+id/tvTime0Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="21:00"
                 android:textAlignment="center" />
 
@@ -105,6 +106,7 @@
                 android:id="@+id/tvTime0WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="14°C"
                 android:textAlignment="center" />
 
@@ -119,6 +121,7 @@
                 android:id="@+id/tvTime1Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="00:00"
                 android:textAlignment="center" />
 
@@ -132,6 +135,7 @@
                 android:id="@+id/tvTime1WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="12°C"
                 android:textAlignment="center" />
 
@@ -146,6 +150,7 @@
                 android:id="@+id/tvTime2Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="03:00"
                 android:textAlignment="center" />
 
@@ -159,6 +164,7 @@
                 android:id="@+id/tvTime2WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="10°C"
                 android:textAlignment="center" />
 
@@ -173,6 +179,7 @@
                 android:id="@+id/tvTime3Home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
                 android:text="06:00"
                 android:textAlignment="center" />
 
@@ -186,6 +193,7 @@
                 android:id="@+id/tvTime3WeatherHome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
                 android:text="10°C"
                 android:textAlignment="center" />
 
@@ -207,7 +215,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
@@ -245,7 +253,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
@@ -283,7 +291,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
@@ -321,7 +329,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
@@ -359,7 +367,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
             <TextView
