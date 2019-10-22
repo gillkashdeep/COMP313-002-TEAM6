@@ -13,8 +13,8 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
 
         // set toolbar title
-        Toolbar tbHome = findViewById(R.id.tbSet);
-        setSupportActionBar(tbHome);
+        Toolbar tbSet = findViewById(R.id.tbSet);
+        setSupportActionBar(tbSet);
         getSupportActionBar().setTitle("Setting");
     }
 }

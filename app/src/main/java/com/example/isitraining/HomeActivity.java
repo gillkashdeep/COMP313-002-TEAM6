@@ -139,6 +139,7 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    // menu item onclick to different activity
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -149,6 +150,10 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.goToSetting:
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivity(intentSet);
+                break;
+            case R.id.goToLogin:
+                Intent intentLogin = new Intent(this,LoginActivity.class);
+                startActivity(intentLogin);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
