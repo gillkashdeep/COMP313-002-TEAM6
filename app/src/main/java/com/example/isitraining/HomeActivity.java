@@ -2,10 +2,7 @@ package com.example.isitraining;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,8 +31,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-
-import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -64,35 +58,10 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     ImageView ivDay5Weather;
 
-    //declaration of notification  variables
-    private NotificationManagerCompat notificationManagerCompat;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
-        //Get users name
-        Intent intent = getIntent();
-        try
-        {
-            String user_name = intent.getStringExtra("user_name");
-            //Toast Hello
-            if (user_name == null)
-            {
-                Toast.makeText(this,  "Welcome Guest",
-                        Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Toast.makeText(this,  "Welcome Back " + user_name,
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-        catch (NullPointerException e)
-        {
-            e.printStackTrace();
-        }
 
         // set toolbar title
         Toolbar tbHome = findViewById(R.id.tbHome);
@@ -112,18 +81,6 @@ public class HomeActivity extends AppCompatActivity {
         tvPresentWeatherHome = findViewById(R.id.tvPresentWeatherHome);
         // get current weather method
         getCurrentWeather();
-
-        notificationManagerCompat = NotificationManagerCompat.from(this);
-
-        //Send Raining Notification
-        if (tvPresentWeatherHome.getText() == "Raining" || tvPresentWeatherHome.getText() == "RAINING")
-        {
-            sendRainNotification();
-        }
-        else if (tvPresentWeatherHome.getText() != "Raining" || tvPresentWeatherHome.getText() != "RAINING")
-        {
-            sendAllClearNotification();
-        }
 
         // find views that relate to 3 hours forecast
         tvTime0Home = findViewById(R.id.tvTime0Home);
@@ -171,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
         tvDay5LowTemHome = findViewById(R.id.tvDay5LowTemHome);
         // get 5 days forecast method
         get5DaysForecast();
+
     }
 
     // add menu to toolbar
@@ -554,43 +512,5 @@ public class HomeActivity extends AppCompatActivity {
         RequestQueue queueCurrentWeather = Volley.newRequestQueue(this);
         queueCurrentWeather.add(jsonObjectRequest);
 
-    }
-
-    public void sendRainNotification()
-    {
-        String rainTitle = "Hey I Think it is Raining!";
-        String rainMessage = "It's Raining! You Should Bring a Umbrella!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(rainTitle)
-                .setContentText(rainMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
-    }
-
-    public void sendAllClearNotification()
-    {
-        String clearTitle = "Hey It Looks Great Outside!";
-        String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(clearTitle)
-                .setContentText(clearMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
     }
 }

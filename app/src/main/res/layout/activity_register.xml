@@ -15,21 +15,21 @@
         android:id="@+id/txtUserName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:hint="Your Email"
+        android:inputType="text"
         android:layout_marginTop="150dp"
-        android:layout_marginRight="20dp"
-        android:hint="Set Your Username"
-        android:inputType="text" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <EditText
         android:id="@+id/txtMail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:hint="Set Your Username"
+        android:inputType="textEmailAddress"
         android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:hint="Your Email"
-        android:inputType="textEmailAddress" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"/>
 
     <EditText
         android:id="@+id/txtSetPass"
@@ -52,7 +52,7 @@
         android:layout_marginRight="20dp"/>
 
     <Button
-        android:id="@+id/btnRegister"
+        android:id="@+id/nextStep1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register"
