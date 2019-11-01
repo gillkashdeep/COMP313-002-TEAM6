@@ -177,7 +177,31 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_toolbar, menu);
+
+        //Get users name
+        Intent intent = getIntent();
+        try
+        {
+            String user_name = intent.getStringExtra("user_name");
+            //Set different option menus
+            if (user_name == null)
+            {
+                inflater.inflate(R.menu.menu_toolbar, menu);
+            }
+            else
+            {
+                if(user_name.equals("Admin")){
+                    inflater.inflate(R.menu.menu_toolbar_admin, menu);
+                }else {
+                    inflater.inflate(R.menu.menu_toolbar_after_login, menu);
+                }
+            }
+        }
+        catch (NullPointerException e)
+        {
+            e.printStackTrace();
+        }
+
         return true;
     }
 
@@ -196,6 +220,22 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.goToLogin:
                 Intent intentLogin = new Intent(this,LoginActivity.class);
                 startActivity(intentLogin);
+                break;
+            case R.id.goToNotificationAfterLogin:
+                Intent intentNotiAfterLogin = new Intent(this,NotificationActivityAfterLogin.class);
+                startActivity(intentNotiAfterLogin);
+                break;
+            case R.id.goToSettingAfterLogin:
+                Intent intentSetAfterLogin = new Intent(this,SettingActivityAfterLogin.class);
+                startActivity(intentSetAfterLogin);
+                break;
+            case R.id.goToAccount:
+                Intent intentAccount = new Intent(this,AccountActivity.class);
+                startActivity(intentAccount);
+                break;
+            case R.id.goToAdminAccount:
+                Intent intentAdminAccount = new Intent(this,AdminAccountActivity.class);
+                startActivity(intentAdminAccount);
                 break;
             default:
                 return super.onOptionsItemSelected(item);

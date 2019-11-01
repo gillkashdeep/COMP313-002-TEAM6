@@ -3,21 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/goToNotification"
+        android:id="@+id/goToNotificationAfterLogin"
         android:title="Go to Notification Page"
         android:icon="@drawable/notification"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/goToSetting"
+        android:id="@+id/goToSettingAfterLogin"
         android:title="Go to Setting Page"
         android:icon="@drawable/settings"
         app:showAsAction="ifRoom"/>
 
     <item
-        android:id="@+id/goToLogin"
+        android:id="@+id/goToAdminAccount"
         android:title="Go to Login Page"
-        android:icon="@drawable/icon_login"
+        android:icon="@drawable/admin"
         app:showAsAction="ifRoom"/>
 
 </menu>
