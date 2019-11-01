@@ -190,7 +190,11 @@ public class HomeActivity extends AppCompatActivity {
             }
             else
             {
-                inflater.inflate(R.menu.menu_toolbar_after_login, menu);
+                if(user_name.equals("Admin")){
+                    inflater.inflate(R.menu.menu_toolbar_admin, menu);
+                }else {
+                    inflater.inflate(R.menu.menu_toolbar_after_login, menu);
+                }
             }
         }
         catch (NullPointerException e)
@@ -228,6 +232,10 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.goToAccount:
                 Intent intentAccount = new Intent(this,AccountActivity.class);
                 startActivity(intentAccount);
+                break;
+            case R.id.goToAdminAccount:
+                Intent intentAdminAccount = new Intent(this,AdminAccountActivity.class);
+                startActivity(intentAdminAccount);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
