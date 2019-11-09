@@ -5,13 +5,13 @@
     <item
         android:id="@+id/goToNotification"
         android:title="Go to Notification Page"
-        android:icon="@drawable/icon_notification"
+        android:icon="@drawable/notification"
         app:showAsAction="ifRoom"/>
 
     <item
         android:id="@+id/goToSetting"
         android:title="Go to Setting Page"
-        android:icon="@drawable/icon_setting"
+        android:icon="@drawable/settings"
         app:showAsAction="ifRoom"/>
 
     <item
