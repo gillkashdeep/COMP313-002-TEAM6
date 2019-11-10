@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,8 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     ImageView ivDay5Weather;
+
+    Switch toggleNotifications;
 
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
@@ -258,47 +261,46 @@ public class HomeActivity extends AppCompatActivity {
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
 
-                    //Send Raining Notification
-                    if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
-                    {
-                        sendRainNotification();
-                    }
-                    else if (currentWeather.equals("Snow") || currentWeather.equals("snow"))
-                    {
-                        sendAllClearNotification();
-                    }
-                    else
-                    {
-                        sendAllClearNotification();
-                    }
+//                    toggleNotifications = findViewById(R.id.switchNotification);
+//                    if (toggleNotifications.isChecked)
+//                    {
+                         //Send Raining Notification
+                         if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
+                         {
+                             sendRainNotification();
+                         }
+                         else if (currentWeather.equals("Snow") || currentWeather.equals("snow"))
+                         {
+                             sendAllClearNotification();
+                         }
+                         else
+                         {
+                             sendAllClearNotification();
+                         }
 
-                    //Send Clothing Notification
-                    int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
-                    String hc;
-                    if (temp <= -3)
-                    {
-                        hc = "Cold";
-                        sendClothingNotification(hc, temp);
-                    }
-                    else if (temp >= 15)
-                    {
-                        hc = "Hot";
-                        sendClothingNotification(hc, temp);
-                    }
-                    else
-                    {
-                        sendAllClearNotification();
-                    }
+                         //Send Clothing Notification
+                         int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
+                         String hc;
+                         if (temp <= -3)
+                         {
+                             hc = "Cold";
+                             sendClothingNotification(hc, temp);
+                         }
+                         else if (temp >= 15)
+                         {
+                             hc = "Hot";
+                             sendClothingNotification(hc, temp);
+                         }
 
-                    if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
-                    {
-                        sendWarningNotification(currentWeather);
-                    }
-                    else
-                    {
-                        sendAllClearNotification();
-                    }
-
+                         if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
+                         {
+                             sendWarningNotification(currentWeather);
+                         }
+                         else
+                         {
+                             sendAllClearNotification();
+                         }
+//                    }
 
                     // set current weather data to views
                     tvCityHome.setText(city);

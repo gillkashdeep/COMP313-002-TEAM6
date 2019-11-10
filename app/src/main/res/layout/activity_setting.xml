@@ -1,53 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-tools:context=".SettingActivity">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SettingActivity">
 
     <include
-    android:id="@+id/tbSet"
-    layout="@layout/toolbar" />
+        android:id="@+id/tbSet"
+        layout="@layout/toolbar" />
 
-
-    <Switch
-        android:id="@+id/switchNotification"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="190dp"
-        android:layout_marginRight="20dp"
-        android:text="Notifications"
-        android:textSize="24sp" />
-
-    <EditText
-    android:id="@+id/txtChangeLocation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:hint="Enter Location"/>
-
-    <Button
-    android:id="@+id/btnChangeLocation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Change Location"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"/>
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Settings"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
