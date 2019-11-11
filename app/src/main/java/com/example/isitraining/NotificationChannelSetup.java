@@ -8,7 +8,8 @@ import android.os.Build;
 public class NotificationChannelSetup extends Application {
 
     //Name of the Channel ID
-    public static final String CHANNEL_1_ID = "notifyRainingActivity";
+    public static final String CHANNEL_1_ID = "notifyWeatherActivity";
+    public static final String CHANNEL_2_ID = "notifyClothingActivity";
 
     @Override
     public void onCreate() {
@@ -24,18 +25,26 @@ public class NotificationChannelSetup extends Application {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {
             //Setup the Channel
-             NotificationChannel rainChannel = new NotificationChannel(
+             NotificationChannel weatherChannel = new NotificationChannel(
                             CHANNEL_1_ID,
-                            "Rain check",
+                            "Weather check",
                             NotificationManager.IMPORTANCE_HIGH
              );
-             rainChannel.setDescription("This is Raining Notifications");
+            weatherChannel.setDescription("This is Weather Notifications");
+
+            NotificationChannel clothingChannel = new NotificationChannel(
+                    CHANNEL_2_ID,
+                    "Clothes report",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            weatherChannel.setDescription("This is Clothing Notifications");
 
              //Creating the Channel
              NotificationManager manager = getSystemService(NotificationManager.class);
              if (manager != null)
              {
-                 manager.createNotificationChannel(rainChannel);
+                 manager.createNotificationChannel(weatherChannel);
+                 manager.createNotificationChannel(clothingChannel);
              }
         }
     }

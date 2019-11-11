@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +38,8 @@ import java.util.Collections;
 import java.util.Date;
 
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
+import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
+import static java.lang.Integer.parseInt;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -63,6 +66,8 @@ public class HomeActivity extends AppCompatActivity {
 
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     ImageView ivDay5Weather;
+
+    Switch toggleNotifications;
 
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
@@ -114,16 +119,6 @@ public class HomeActivity extends AppCompatActivity {
         getCurrentWeather();
 
         notificationManagerCompat = NotificationManagerCompat.from(this);
-
-        //Send Raining Notification
-        if (tvPresentWeatherHome.getText() == "Raining" || tvPresentWeatherHome.getText() == "RAINING")
-        {
-            sendRainNotification();
-        }
-        else if (tvPresentWeatherHome.getText() != "Raining" || tvPresentWeatherHome.getText() != "RAINING")
-        {
-            sendAllClearNotification();
-        }
 
         // find views that relate to 3 hours forecast
         tvTime0Home = findViewById(R.id.tvTime0Home);
@@ -265,6 +260,47 @@ public class HomeActivity extends AppCompatActivity {
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
+
+//                    toggleNotifications = findViewById(R.id.switchNotification);
+//                    if (toggleNotifications.isChecked)
+//                    {
+                         //Send Raining Notification
+                         if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
+                         {
+                             sendRainNotification();
+                         }
+                         else if (currentWeather.equals("Snow") || currentWeather.equals("snow"))
+                         {
+                             sendAllClearNotification();
+                         }
+                         else
+                         {
+                             sendAllClearNotification();
+                         }
+
+                         //Send Clothing Notification
+                         int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
+                         String hc;
+                         if (temp <= -3)
+                         {
+                             hc = "Cold";
+                             sendClothingNotification(hc, temp);
+                         }
+                         else if (temp >= 15)
+                         {
+                             hc = "Hot";
+                             sendClothingNotification(hc, temp);
+                         }
+
+                         if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
+                         {
+                             sendWarningNotification(currentWeather);
+                         }
+                         else
+                         {
+                             sendAllClearNotification();
+                         }
+//                    }
 
                     // set current weather data to views
                     tvCityHome.setText(city);
@@ -612,6 +648,52 @@ public class HomeActivity extends AppCompatActivity {
         if (notificationManagerCompat != null)
         {
             notificationManagerCompat.notify(1, notification);
+        }
+    }
+
+    public void sendWarningNotification(String warning)
+    {
+        String rainTitle = "Hey I Think it is Getting Crazy out There!";
+        String rainMessage = "It's " + warning + "! You Should Be Careful Today!";
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_weather_update)
+                .setContentTitle(rainTitle)
+                .setContentText(rainMessage)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        if (notificationManagerCompat != null)
+        {
+            notificationManagerCompat.notify(1, notification);
+        }
+    }
+
+    public void sendClothingNotification(String hc, int temp)
+    {
+        String rainTitle = "Hey I Think it is pretty " + hc + " Outside!";
+        if (hc.equals("Cold"))
+        {
+            hc = "Warmly";
+        }
+        else if (hc.equals("Hot"))
+        {
+            hc = "Cool";
+        }
+        String rainMessage = "It's " + temp + "°C. You Should Dress " + hc + " Today.";
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_2_ID)
+                .setSmallIcon(R.drawable.ic_weather_update)
+                .setContentTitle(rainTitle)
+                .setContentText(rainMessage)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        if (notificationManagerCompat != null)
+        {
+            notificationManagerCompat.notify(2, notification);
         }
     }
 
