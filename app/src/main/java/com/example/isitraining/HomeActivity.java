@@ -68,8 +68,6 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     ImageView ivDay5Weather;
 
-    Switch toggleNotifications;
-
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
 
@@ -242,7 +240,9 @@ public class HomeActivity extends AppCompatActivity {
     String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+    String isNotiOn = "t";
 
+    // when other activity send result (information) to this activity, use this method to get the result
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -250,10 +250,11 @@ public class HomeActivity extends AppCompatActivity {
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
                 String result = data.getStringExtra("result");
-                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-                threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-                fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-//                Toast.makeText(this, currentWeatherJsonUrl, Toast.LENGTH_SHORT).show();
+                isNotiOn = result.substring(0, 1);
+                String location = result.substring(1);
+                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
 
                 getCurrentWeather();
                 get3HoursForecast();
@@ -288,9 +289,8 @@ public class HomeActivity extends AppCompatActivity {
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
 
-                    toggleNotifications = findViewById(R.id.switchNotification);
-//                    if (toggleNotifications.isChecked())
-//                    {
+                    if (isNotiOn.equals("t"))
+                    {
                          //Send Raining Notification
                          if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
                          {
@@ -327,7 +327,7 @@ public class HomeActivity extends AppCompatActivity {
                          {
                              sendAllClearNotification();
                          }
-//                    }
+                    }
 
                     // set current weather data to views
                     tvCityHome.setText(city);

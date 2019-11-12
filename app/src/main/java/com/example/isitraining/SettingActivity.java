@@ -8,12 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 public class SettingActivity extends AppCompatActivity {
 
     String txtChangeLocation;
     String txtChangeCountry;
+
+    Switch switchNotification;
+    String isNotiOn;
 
     EditText etChangeLocation;
     EditText etChangeCountry;
@@ -29,6 +33,8 @@ public class SettingActivity extends AppCompatActivity {
         setSupportActionBar(tbSet);
         getSupportActionBar().setTitle("Setting");
 
+        switchNotification = findViewById(R.id.switchNotification);
+
         etChangeLocation = findViewById(R.id.etChangeLocation);
         etChangeCountry = findViewById(R.id.etChangeCountry);
         btnSaveChanges = findViewById(R.id.btnSaveChanges);
@@ -36,11 +42,18 @@ public class SettingActivity extends AppCompatActivity {
         btnSaveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(switchNotification.isChecked()){
+                    isNotiOn = "t";
+                }else {
+                    isNotiOn = "f";
+                    switchNotification.setChecked(false);
+                }
+
                 txtChangeLocation = etChangeLocation.getText().toString();
                 txtChangeCountry = etChangeCountry.getText().toString();
 
                 if(!txtChangeLocation.equals("") && !txtChangeCountry.equals("")){
-                    String result = txtChangeLocation + "," + txtChangeCountry;
+                    String result = isNotiOn + txtChangeLocation + "," + txtChangeCountry;
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("result", result);
