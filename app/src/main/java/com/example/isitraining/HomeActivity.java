@@ -1,5 +1,6 @@
 package com.example.isitraining;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -210,7 +211,7 @@ public class HomeActivity extends AppCompatActivity {
                 break;
             case R.id.goToSetting:
                 Intent intentSet = new Intent(this,SettingActivity.class);
-                startActivity(intentSet);
+                startActivityForResult(intentSet, 1);
                 break;
             case R.id.goToLogin:
                 Intent intentLogin = new Intent(this,LoginActivity.class);
@@ -238,13 +239,39 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+    String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+    String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                String result = data.getStringExtra("result");
+                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + result + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+//                Toast.makeText(this, currentWeatherJsonUrl, Toast.LENGTH_SHORT).show();
+
+                getCurrentWeather();
+                get3HoursForecast();
+                get5DaysForecast();
+            }
+            if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
     // get current weather
     public void getCurrentWeather(){
         // In the future iteration it will be changed to user chosen City
-        String torontoCurrentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+//        String torontoCurrentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
 
         // establish Json request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, torontoCurrentWeatherJsonUrl, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, currentWeatherJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try{
@@ -261,8 +288,8 @@ public class HomeActivity extends AppCompatActivity {
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
 
-//                    toggleNotifications = findViewById(R.id.switchNotification);
-//                    if (toggleNotifications.isChecked)
+                    toggleNotifications = findViewById(R.id.switchNotification);
+//                    if (toggleNotifications.isChecked())
 //                    {
                          //Send Raining Notification
                          if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
@@ -327,10 +354,10 @@ public class HomeActivity extends AppCompatActivity {
     // get 3 hours forecast
     public void get3HoursForecast(){
         // In the future iteration it will be changed to user chosen City
-        String toronto3HoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+//        String toronto3HoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
 
         // establish Json request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, toronto3HoursForecastJsonUrl, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, threeHoursForecastJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try{
@@ -465,10 +492,10 @@ public class HomeActivity extends AppCompatActivity {
         final String day5 = dayFormat.format(day5Date);
 
         // In the future iteration it will be changed to user chosen City
-        String toronto5DaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+//        String toronto5DaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
 
         // establish Json request
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, toronto5DaysForecastJsonUrl, null, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, fiveDaysForecastJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try{

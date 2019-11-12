@@ -22,32 +22,39 @@ tools:context=".SettingActivity">
         android:layout_marginTop="190dp"
         android:layout_marginRight="20dp"
         android:text="Notifications"
-        android:textSize="24sp" />
+        android:checked="true"
+        android:textSize="21sp" />
 
-    <EditText
-    android:id="@+id/txtChangeLocation"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"
-    android:hint="Enter Location"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/etChangeLocation"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:hint="Enter Your Location" />
+
+        <EditText
+            android:id="@+id/etChangeCountry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:hint="Country Code"/>
+
+    </LinearLayout>
 
     <Button
-    android:id="@+id/btnChangeLocation"
+    android:id="@+id/btnSaveChanges"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Change Location"
+    android:text="Save Changes"
     android:layout_marginTop="10dp"
     android:layout_marginLeft="20dp"
     android:layout_marginRight="20dp"/>
-
-    <Button
-        android:id="@+id/btnSave"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save Settings"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"/>
 </LinearLayout>
