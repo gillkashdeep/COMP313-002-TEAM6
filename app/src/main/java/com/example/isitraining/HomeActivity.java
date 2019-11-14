@@ -167,6 +167,8 @@ public class HomeActivity extends AppCompatActivity {
         get5DaysForecast();
     }
 
+    String user_name;
+
     // add menu to toolbar
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -176,7 +178,7 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         try
         {
-            String user_name = intent.getStringExtra("user_name");
+            user_name = intent.getStringExtra("user_name");
             //Set different option menus
             if (user_name == null)
             {
@@ -306,18 +308,21 @@ public class HomeActivity extends AppCompatActivity {
                          }
 
                          //Send Clothing Notification
-                         int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
-                         String hc;
-                         if (temp <= -3)
-                         {
-                             hc = "Cold";
-                             sendClothingNotification(hc, temp);
-                         }
-                         else if (temp >= 15)
-                         {
-                             hc = "Hot";
-                             sendClothingNotification(hc, temp);
-                         }
+                        if(user_name != null){
+                            int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
+                            String hc;
+                            if (temp <= -3)
+                            {
+                                hc = "Cold";
+                                sendClothingNotification(hc, temp);
+                            }
+                            else if (temp >= 15)
+                            {
+                                hc = "Hot";
+                                sendClothingNotification(hc, temp);
+                            }
+                        }
+
 
                          if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
                          {
