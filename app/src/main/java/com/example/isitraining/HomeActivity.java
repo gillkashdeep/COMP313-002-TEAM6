@@ -291,8 +291,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     if (isNotiOn.equals("t"))
                     {
-                        Toast.makeText(HomeActivity.this, currentWeather, Toast.LENGTH_SHORT).show();
-
                          //Send Raining Notification
                          if (currentWeather.equals("Rain"))
                          {
