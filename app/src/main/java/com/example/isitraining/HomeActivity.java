@@ -296,10 +296,9 @@ public class HomeActivity extends AppCompatActivity {
                          //Send Raining Notification
                          if (currentWeather.equals("Rain"))
                          {
-
                              sendRainNotification();
                          }
-                         if (currentWeather.equals("Snow"))
+                         else if (currentWeather.equals("Snow"))
                          {
                              sendSnowNotification();
                          }
