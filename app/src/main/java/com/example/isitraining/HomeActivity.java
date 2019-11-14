@@ -291,14 +291,17 @@ public class HomeActivity extends AppCompatActivity {
 
                     if (isNotiOn.equals("t"))
                     {
+                        Toast.makeText(HomeActivity.this, currentWeather, Toast.LENGTH_SHORT).show();
+
                          //Send Raining Notification
-                         if (currentWeather.equals("Rain") || currentWeather.equals("rain"))
+                         if (currentWeather.equals("Rain"))
                          {
+
                              sendRainNotification();
                          }
-                         else if (currentWeather.equals("Snow") || currentWeather.equals("snow"))
+                         if (currentWeather.equals("Snow"))
                          {
-                             sendAllClearNotification();
+                             sendSnowNotification();
                          }
                          else
                          {
@@ -322,10 +325,6 @@ public class HomeActivity extends AppCompatActivity {
                          if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
                          {
                              sendWarningNotification(currentWeather);
-                         }
-                         else
-                         {
-                             sendAllClearNotification();
                          }
                     }
 
@@ -663,6 +662,25 @@ public class HomeActivity extends AppCompatActivity {
     {
         String rainTitle = "Hey I Think it is Raining!";
         String rainMessage = "It's Raining! You Should Bring a Umbrella!";
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
+                .setSmallIcon(R.drawable.ic_weather_update)
+                .setContentTitle(rainTitle)
+                .setContentText(rainMessage)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        if (notificationManagerCompat != null)
+        {
+            notificationManagerCompat.notify(1, notification);
+        }
+    }
+
+    public void sendSnowNotification()
+    {
+        String rainTitle = "Hey I Think it is Snowing!";
+        String rainMessage = "It's Snowing! You Should Bring be Careful out There!";
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_weather_update)
