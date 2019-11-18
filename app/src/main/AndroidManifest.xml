@@ -16,11 +16,9 @@
         <activity android:name=".AdminAccountActivity"></activity>
         <activity android:name=".AccountActivity" />
         <activity android:name=".SettingActivityAfterLogin" />
-        <activity android:name=".NotificationActivityAfterLogin" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".SettingActivity" />
-        <activity android:name=".NotificationActivity" />
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

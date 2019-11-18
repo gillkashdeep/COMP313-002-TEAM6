@@ -3,12 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/goToNotification"
-        android:title="Go to Notification Page"
-        android:icon="@drawable/notification"
-        app:showAsAction="ifRoom"/>
-
-    <item
         android:id="@+id/goToSetting"
         android:title="Go to Setting Page"
         android:icon="@drawable/settings"

@@ -205,10 +205,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
-            case R.id.goToNotification:
-                Intent intentNoti = new Intent(this,NotificationActivity.class);
-                startActivity(intentNoti);
-                break;
             case R.id.goToSetting:
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivityForResult(intentSet, 1);
@@ -217,11 +213,8 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intentLogin = new Intent(this,LoginActivity.class);
                 startActivity(intentLogin);
                 break;
-            case R.id.goToNotificationAfterLogin:
-                Intent intentNotiAfterLogin = new Intent(this,NotificationActivityAfterLogin.class);
-                startActivity(intentNotiAfterLogin);
-                break;
             case R.id.goToSettingAfterLogin:
+            case R.id.goToSettingAfterLogin_Admin:
                 Intent intentSetAfterLogin = new Intent(this,SettingActivityAfterLogin.class);
                 startActivity(intentSetAfterLogin);
                 break;
