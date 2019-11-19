@@ -36,7 +36,7 @@ public class SettingActivityAfterLogin extends AppCompatActivity implements Time
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        
+
         TextView tvNotiTime = findViewById(R.id.tvNotiTime);
         if(minute < 10){
             tvNotiTime.setText("Will Notify You At " + hour + ":0" + minute);

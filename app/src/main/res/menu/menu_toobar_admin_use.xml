@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/goToWarning"
+        android:title="Go to Warning Page"
+        android:icon="@drawable/icon_warning"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/goToHomePageWithoutLoginAdmin"
+        android:title="Go to Home Page Without Login (Admin)"
+        android:icon="@drawable/icon_logout"
+        app:showAsAction="ifRoom"/>
+
+</menu>
