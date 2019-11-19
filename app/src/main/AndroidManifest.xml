@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AdminAccountActivity"></activity>
+        <activity android:name=".FeedbackActivity"></activity>
+        <activity android:name=".AdminAccountActivity" />
         <activity android:name=".AccountActivity" />
         <activity android:name=".SettingActivityAfterLogin" />
         <activity android:name=".RegisterActivity" />
