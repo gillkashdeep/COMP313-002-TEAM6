@@ -216,7 +216,7 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.goToSettingAfterLogin:
             case R.id.goToSettingAfterLogin_Admin:
                 Intent intentSetAfterLogin = new Intent(this,SettingActivityAfterLogin.class);
-                startActivity(intentSetAfterLogin);
+                startActivityForResult(intentSetAfterLogin, 2);
                 break;
             case R.id.goToAccount:
                 Intent intentAccount = new Intent(this,AccountActivity.class);
@@ -247,6 +247,22 @@ public class HomeActivity extends AppCompatActivity {
                 String result = data.getStringExtra("result");
                 isNotiOn = result.substring(0, 1);
                 String location = result.substring(1);
+                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+
+                getCurrentWeather();
+                get3HoursForecast();
+                get5DaysForecast();
+            }
+            if(resultCode == RESULT_CANCELED){
+                Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
+            }
+        }else if(requestCode == 2){
+            if(resultCode == RESULT_OK){
+                String result2 = data.getStringExtra("result2");
+                isNotiOn = result2.substring(0, 1);
+                String location = result2.substring(1);
                 currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
@@ -304,7 +320,7 @@ public class HomeActivity extends AppCompatActivity {
                         if(user_name != null){
                             int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                             String hc;
-                            if (temp <= -3)
+                            if (temp < 15)
                             {
                                 hc = "Cold";
                                 sendClothingNotification(hc, temp);
