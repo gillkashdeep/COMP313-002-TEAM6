@@ -27,6 +27,8 @@ public class SettingActivityAfterLogin extends AppCompatActivity implements Time
     EditText etChangeCountryAfterLogin;
     Button btnSaveChangesAfterLogin;
 
+    String hourMinute = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,7 +69,7 @@ public class SettingActivityAfterLogin extends AppCompatActivity implements Time
                 txtChangeCountryAfterLogin = etChangeCountryAfterLogin.getText().toString();
 
                 if(!txtChangeLocationAfterLogin.equals("") && !txtChangeCountryAfterLogin.equals("")){
-                    String result = isNotiOn + txtChangeLocationAfterLogin + "," + txtChangeCountryAfterLogin;
+                    String result = isNotiOn + hourMinute + txtChangeLocationAfterLogin + "," + txtChangeCountryAfterLogin;
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra("result2", result);
@@ -83,6 +85,26 @@ public class SettingActivityAfterLogin extends AppCompatActivity implements Time
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+
+        String sHour, sMinute;
+
+        if(hour < 10){
+            sHour = "0" + hour;
+            if(minute < 10){
+                sMinute = "0" + minute;
+            }else {
+                sMinute = Integer.toString(minute);
+            }
+        }else {
+            sHour = Integer.toString(hour);
+            if(minute < 10){
+                sMinute = "0" + minute;
+            }else {
+                sMinute = Integer.toString(minute);
+            }
+        }
+
+        hourMinute = sHour + sMinute;
 
         TextView tvNotiTime = findViewById(R.id.tvNotiTime);
         if(minute < 10){

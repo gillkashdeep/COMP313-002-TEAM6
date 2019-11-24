@@ -6,7 +6,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.app.AlarmManager;
 import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -236,6 +239,7 @@ public class HomeActivity extends AppCompatActivity {
     String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String isNotiOn = "t";
+    Calendar c = Calendar.getInstance();
 
     // when other activity send result (information) to this activity, use this method to get the result
     @Override
@@ -262,10 +266,27 @@ public class HomeActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                 String result2 = data.getStringExtra("result2");
                 isNotiOn = result2.substring(0, 1);
-                String location = result2.substring(1);
+                String hourMinute = result2.substring(1, 5);
+                String location = result2.substring(5);
                 currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+
+                String sHour = hourMinute.substring(0, 2);
+                String sMinute = hourMinute.substring(2);
+                int hour, minute;
+
+                hour = Integer.parseInt(sHour);
+                minute = Integer.parseInt(sMinute);
+
+                if(hour != 0 && minute != 0){
+                    c.set(Calendar.HOUR_OF_DAY, hour);
+                    c.set(Calendar.MINUTE, minute);
+                    c.set(Calendar.SECOND, 0);
+
+                    startAlarm(c);
+//                    Toast.makeText(this, "" + minute, Toast.LENGTH_SHORT).show();
+                }
 
                 getCurrentWeather();
                 get3HoursForecast();
@@ -275,6 +296,15 @@ public class HomeActivity extends AppCompatActivity {
                 Toast.makeText(this, "Nothing", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void startAlarm(Calendar c){
+        Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 
     // get current weather
@@ -297,46 +327,15 @@ public class HomeActivity extends AppCompatActivity {
                     // get current weather data
                     String city = response.getString("name");
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
+                    int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
+                    NotificationUtility notificationUtility = new NotificationUtility();
 
                     if (isNotiOn.equals("t"))
                     {
                          //Send Raining Notification
-                         if (currentWeather.equals("Rain"))
-                         {
-                             sendRainNotification();
-                         }
-                         else if (currentWeather.equals("Snow"))
-                         {
-                             sendSnowNotification();
-                         }
-                         else
-                         {
-                             sendAllClearNotification();
-                         }
-
-                         //Send Clothing Notification
-                        if(user_name != null){
-                            int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
-                            String hc;
-                            if (temp < 15)
-                            {
-                                hc = "Cold";
-                                sendClothingNotification(hc, temp);
-                            }
-                            else if (temp >= 15)
-                            {
-                                hc = "Hot";
-                                sendClothingNotification(hc, temp);
-                            }
-                        }
-
-
-                         if (currentWeather.equals("ThunderStorm") || currentWeather.equals("thunderstorm"))
-                         {
-                             sendWarningNotification(currentWeather);
-                         }
+                         notificationUtility.sendNotification(HomeActivity.this, notificationManagerCompat, currentWeather, user_name, temp);
                     }
 
                     // set current weather data to views
