@@ -11,7 +11,9 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -239,6 +241,7 @@ public class HomeActivity extends AppCompatActivity {
     String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
     String isNotiOn = "t";
+
     Calendar c = Calendar.getInstance();
 
     // when other activity send result (information) to this activity, use this method to get the result
@@ -272,6 +275,14 @@ public class HomeActivity extends AppCompatActivity {
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
 
+
+                SharedPreferences sharedPreferences = getSharedPreferences("prefsAlarm", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                editor.putString("currentWeatherJsonUrl", currentWeatherJsonUrl);
+                editor.putString("user_name", user_name);
+                editor.apply();
+
                 String sHour = hourMinute.substring(0, 2);
                 String sMinute = hourMinute.substring(2);
                 int hour, minute;
@@ -285,7 +296,6 @@ public class HomeActivity extends AppCompatActivity {
                     c.set(Calendar.SECOND, 0);
 
                     startAlarm(c);
-//                    Toast.makeText(this, "" + minute, Toast.LENGTH_SHORT).show();
                 }
 
                 getCurrentWeather();
@@ -309,9 +319,6 @@ public class HomeActivity extends AppCompatActivity {
 
     // get current weather
     public void getCurrentWeather(){
-        // In the future iteration it will be changed to user chosen City
-//        String torontoCurrentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-
         // establish Json request
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, currentWeatherJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -330,6 +337,7 @@ public class HomeActivity extends AppCompatActivity {
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
                     String currentWeather = object0WeatherArrayJson.getString("main");
+
                     NotificationUtility notificationUtility = new NotificationUtility();
 
                     if (isNotiOn.equals("t"))
@@ -666,108 +674,5 @@ public class HomeActivity extends AppCompatActivity {
         RequestQueue queueCurrentWeather = Volley.newRequestQueue(this);
         queueCurrentWeather.add(jsonObjectRequest);
 
-    }
-
-    public void sendRainNotification()
-    {
-        String rainTitle = "Hey I Think it is Raining!";
-        String rainMessage = "It's Raining! You Should Bring a Umbrella!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(rainTitle)
-                .setContentText(rainMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
-    }
-
-    public void sendSnowNotification()
-    {
-        String rainTitle = "Hey I Think it is Snowing!";
-        String rainMessage = "It's Snowing! You Should Bring be Careful out There!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(rainTitle)
-                .setContentText(rainMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
-    }
-
-    public void sendWarningNotification(String warning)
-    {
-        String rainTitle = "Hey I Think it is Getting Crazy out There!";
-        String rainMessage = "It's " + warning + "! You Should Be Careful Today!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(rainTitle)
-                .setContentText(rainMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
-    }
-
-    public void sendClothingNotification(String hc, int temp)
-    {
-        String rainTitle = "Hey I Think it is pretty " + hc + " Outside!";
-        if (hc.equals("Cold"))
-        {
-            hc = "Warmly";
-        }
-        else if (hc.equals("Hot"))
-        {
-            hc = "Cool";
-        }
-        String rainMessage = "It's " + temp + "°C. You Should Dress " + hc + " Today.";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_2_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(rainTitle)
-                .setContentText(rainMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(2, notification);
-        }
-    }
-
-    public void sendAllClearNotification()
-    {
-        String clearTitle = "Hey It Looks Great Outside!";
-        String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!";
-
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_1_ID)
-                .setSmallIcon(R.drawable.ic_weather_update)
-                .setContentTitle(clearTitle)
-                .setContentText(clearMessage)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .build();
-
-        if (notificationManagerCompat != null)
-        {
-            notificationManagerCompat.notify(1, notification);
-        }
     }
 }
