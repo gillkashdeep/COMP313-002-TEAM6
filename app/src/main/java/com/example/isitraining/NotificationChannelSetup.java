@@ -10,6 +10,7 @@ public class NotificationChannelSetup extends Application {
     //Name of the Channel ID
     public static final String CHANNEL_1_ID = "notifyWeatherActivity";
     public static final String CHANNEL_2_ID = "notifyClothingActivity";
+    public static final String CHANNEL_3_ID = "notifyWarningActivity";
 
     @Override
     public void onCreate() {
@@ -39,12 +40,20 @@ public class NotificationChannelSetup extends Application {
             );
             weatherChannel.setDescription("This is Clothing Notifications");
 
+            NotificationChannel warningChannel = new NotificationChannel(
+                    CHANNEL_3_ID,
+                    "Weather Warning",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            weatherChannel.setDescription("This is Weather Warning Notifications");
+
              //Creating the Channel
              NotificationManager manager = getSystemService(NotificationManager.class);
              if (manager != null)
              {
                  manager.createNotificationChannel(weatherChannel);
                  manager.createNotificationChannel(clothingChannel);
+                 manager.createNotificationChannel(warningChannel);
              }
         }
     }

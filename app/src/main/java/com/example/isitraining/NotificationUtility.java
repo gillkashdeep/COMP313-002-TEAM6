@@ -2,12 +2,18 @@ package com.example.isitraining;
 
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
+import static com.example.isitraining.NotificationChannelSetup.CHANNEL_3_ID;
 
 public class NotificationUtility {
 
@@ -29,10 +35,24 @@ public class NotificationUtility {
             sendAllClearNotification(context, notificationManagerCompat);
         }
 
+        try {
+            JSONObject jsonResponse = new JSONObject();
+            boolean success = jsonResponse.getBoolean("success");
+            String warning = jsonResponse.getString("warning_Desc");
+
+            if(success)
+            {
+                sendWarning(warning, context, notificationManagerCompat);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
         //Send Clothing Notification
         if(user_name != null){
             String hc;
-            if (temp < 15)
+            if (temp <= 0)
             {
                 hc = "Cold";
                 sendClothingNotification(hc, temp, context, notificationManagerCompat);
@@ -151,6 +171,25 @@ public class NotificationUtility {
         if (notificationManagerCompat != null)
         {
             notificationManagerCompat.notify(1, notification);
+        }
+    }
+
+    public void sendWarning(String warning, Context context, NotificationManagerCompat notificationManagerCompat)
+    {
+        String warningTitle = "Warning";
+        String warningMessage = warning;
+
+        Notification notification = new NotificationCompat.Builder(context, CHANNEL_3_ID)
+                .setSmallIcon(R.drawable.ic_weather_update)
+                .setContentTitle(warningTitle)
+                .setContentText(warningMessage)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .build();
+
+        if (notificationManagerCompat != null)
+        {
+            notificationManagerCompat.notify(3, notification);
         }
     }
 }

@@ -19,6 +19,8 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
+    public static Bundle mMyAppsBundle = new Bundle();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,13 +29,17 @@ public class LoginActivity extends AppCompatActivity {
         final EditText userName = findViewById(R.id.txtUser);
         final EditText passWord = findViewById(R.id.txtPassword);
 
+
+
         final Button bLogin = findViewById(R.id.btnLogin);
 
         bLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String user_name = userName.getText().toString();
+                LoginActivity.mMyAppsBundle.putString("1", user_name);
                 final String user_password = passWord.getText().toString();
+                LoginActivity.mMyAppsBundle.putString("2", user_password);
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override

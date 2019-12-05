@@ -8,6 +8,11 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class AdminAccountActivity extends AppCompatActivity {
 
@@ -20,6 +25,22 @@ public class AdminAccountActivity extends AppCompatActivity {
         Toolbar tbAdminGetFeedback = findViewById(R.id.tbAdminGetFeedback);
         setSupportActionBar(tbAdminGetFeedback);
         getSupportActionBar().setTitle("All Feedback");
+
+        final TextView Feedback = findViewById(R.id.txtViewFeedback);
+
+        try {
+            JSONObject jsonResponse = new JSONObject();
+            boolean success = jsonResponse.getBoolean("success");
+            String feedback = jsonResponse.getString("feedback");
+
+            if(success)
+            {
+                Feedback.setText(feedback);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // add menu to toolbar
