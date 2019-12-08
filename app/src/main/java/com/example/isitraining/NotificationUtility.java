@@ -37,13 +37,9 @@ public class NotificationUtility {
 
         try {
             JSONObject jsonResponse = new JSONObject();
-            boolean success = jsonResponse.getBoolean("success");
             String warning = jsonResponse.getString("warning_Desc");
 
-            if(success)
-            {
-                sendWarning(warning, context, notificationManagerCompat);
-            }
+            sendWarning(warning, context, notificationManagerCompat);
 
         } catch (JSONException e) {
             e.printStackTrace();

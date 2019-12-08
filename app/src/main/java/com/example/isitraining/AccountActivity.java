@@ -29,7 +29,6 @@ public class AccountActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account);
 
         final EditText user_name_new = findViewById(R.id.etUpdateUser);
-        final EditText user_mail_old = findViewById(R.id.etOldMail);
         final EditText user_mail_new = findViewById(R.id.etUpdateMail);
         final EditText password_new = findViewById(R.id.etSetPassUpdate);
         final EditText password_new_check = findViewById(R.id.etRepeatPassUpdate);
@@ -44,7 +43,6 @@ public class AccountActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 final String User_name_new = user_name_new.getText().toString();
-                final String User_mail_old = user_mail_old.getText().toString();
                 final String User_mail_new = user_mail_new.getText().toString();
                 final String Password_new = password_new.getText().toString();
                 final String Password_new_check = password_new_check.getText().toString();
@@ -87,14 +85,6 @@ public class AccountActivity extends AppCompatActivity {
                     queue.add(updateUsernameRequest);
                 }
 
-                if (User_mail_old == null || User_mail_old == "" || User_mail_old == " ")
-                {
-                    AlertDialog.Builder regFail = new AlertDialog.Builder(AccountActivity.this);
-                    regFail.setMessage("Your old email address is needed if you want to update it.")
-                            .setNegativeButton("Retry", null)
-                            .create()
-                            .show();
-                }
                 if (User_mail_new != null || User_mail_new !="" || User_mail_new !=" ")
                 {
                     Response.Listener<String> responseListener = new Response.Listener<String>()
@@ -128,7 +118,7 @@ public class AccountActivity extends AppCompatActivity {
                         }
                     };
 
-                    UpdateEmailRequest updateEmailRequest = new UpdateEmailRequest(User_mail_old, User_mail_new, responseListener);
+                    UpdateEmailRequest updateEmailRequest = new UpdateEmailRequest(User_mail_new, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(AccountActivity.this);
                     queue.add(updateEmailRequest);
                 }

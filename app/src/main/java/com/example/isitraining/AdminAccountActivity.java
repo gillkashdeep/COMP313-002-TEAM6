@@ -30,13 +30,10 @@ public class AdminAccountActivity extends AppCompatActivity {
 
         try {
             JSONObject jsonResponse = new JSONObject();
-            boolean success = jsonResponse.getBoolean("success");
-            String feedback = jsonResponse.getString("feedback");
+            String feedback = jsonResponse.getString("Feedback_Desc");
+            String username = jsonResponse.getString("User_name");
 
-            if(success)
-            {
-                Feedback.setText(feedback);
-            }
+                Feedback.setText(String.format("%s  %s /n", username, feedback));
 
         } catch (JSONException e) {
             e.printStackTrace();
