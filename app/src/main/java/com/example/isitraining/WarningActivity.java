@@ -47,8 +47,6 @@ public class WarningActivity extends AppCompatActivity {
                             if(success)
                             {
                                 Delivered();
-                                Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
-                                WarningActivity.this.startActivity(intent);
                             }
                             else
                             {
@@ -65,6 +63,10 @@ public class WarningActivity extends AppCompatActivity {
 
                     }
                 };
+
+                Delivered();
+                Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
+                WarningActivity.this.startActivity(intent);
 
                 WarningRequest warningRequest = new WarningRequest(Warning_Desc, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(WarningActivity.this);

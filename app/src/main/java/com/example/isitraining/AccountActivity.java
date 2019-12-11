@@ -35,7 +35,6 @@ public class AccountActivity extends AppCompatActivity {
         final Button update = findViewById(R.id.btnUpdateReg);
 
         final String User_name = LoginActivity.mMyAppsBundle.getString("1");
-        final String User_password = LoginActivity.mMyAppsBundle.getString("2");
 
         update.setOnClickListener(new View.OnClickListener() {
 
@@ -118,7 +117,7 @@ public class AccountActivity extends AppCompatActivity {
                         }
                     };
 
-                    UpdateEmailRequest updateEmailRequest = new UpdateEmailRequest(User_mail_new, responseListener);
+                    UpdateEmailRequest updateEmailRequest = new UpdateEmailRequest(User_mail_new, User_name_new, responseListener);
                     RequestQueue queue = Volley.newRequestQueue(AccountActivity.this);
                     queue.add(updateEmailRequest);
                 }
@@ -158,7 +157,7 @@ public class AccountActivity extends AppCompatActivity {
                             }
                         };
 
-                        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(User_password, Password_new, responseListener);
+                        UpdatePasswordRequest updatePasswordRequest = new UpdatePasswordRequest(User_name_new, Password_new, responseListener);
                         RequestQueue queue = Volley.newRequestQueue(AccountActivity.this);
                         queue.add(updatePasswordRequest);
                     }

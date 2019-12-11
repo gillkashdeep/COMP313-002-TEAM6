@@ -5,16 +5,32 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 public class AdminAccountActivity extends AppCompatActivity {
+    JSONObject jso;
+    JSONArray jsa;
+    TextView Feedback;
+    private static final String Feedback_Request_URL = "https://isitraining.000webhostapp.com/Retrive_Feedback.php";
+    InputStream is;
+    String line;
+    String result;
+    String[] data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,18 +42,12 @@ public class AdminAccountActivity extends AppCompatActivity {
         setSupportActionBar(tbAdminGetFeedback);
         getSupportActionBar().setTitle("All Feedback");
 
-        final TextView Feedback = findViewById(R.id.txtViewFeedback);
+        Feedback = findViewById(R.id.txtViewFeedback);
 
-        try {
-            JSONObject jsonResponse = new JSONObject();
-            String feedback = jsonResponse.getString("Feedback_Desc");
-            String username = jsonResponse.getString("User_name");
+        StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
 
-                Feedback.setText(String.format("%s  %s /n", username, feedback));
+        getData();
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     // add menu to toolbar
@@ -66,5 +76,62 @@ public class AdminAccountActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    private void getData()
+    {
+        try
+        {
+            URL url = new URL(Feedback_Request_URL);
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+
+            is = new BufferedInputStream(con.getInputStream());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            while((br.readLine()) != null )
+            {
+                sb.append(line + "\n");
+            }
+            is.close();
+            result = sb.toString();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        try
+        {
+            jsa = new JSONArray(result);
+
+            data = new String[jsa.length()];
+
+            for(int i = 0; i < jsa.length(); i++)
+            {
+                jso = jsa.getJSONObject(i);
+                data[i] = jso.getString("User_name" + "\n" + "Feedback_Desc");
+            }
+
+            for(int i = 0; i < jsa.length(); i++)
+            {
+                Feedback.setText(data[i]);
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 }

@@ -11,11 +11,11 @@ public class UpdatePasswordRequest  extends StringRequest {
     private static final String Password_Update_Request_URL = "https://isitraining.000webhostapp.com/Update_Password.php";
     private final Map<String, String> params;
 
-    public UpdatePasswordRequest(String User_password, String User_password_new, Response.Listener<String> listener)
+    public UpdatePasswordRequest(String User_name, String User_password_new, Response.Listener<String> listener)
     {
         super(Method.POST, Password_Update_Request_URL, listener, null);
         params = new HashMap<>();
-        params.put("User_password", User_password);
+        params.put("User_name", User_name);
         params.put("User_password_new", User_password_new);
     }
 
