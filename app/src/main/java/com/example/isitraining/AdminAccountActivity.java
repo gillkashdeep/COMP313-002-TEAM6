@@ -99,7 +99,7 @@ public class AdminAccountActivity extends AppCompatActivity {
             }
 
             result = sb.toString();
-            Toast.makeText(this, "data retrieve: " + result, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "data retrieve: " + result, Toast.LENGTH_SHORT).show();
             Feedback.setText(result);
 
 //            jsa = new JSONArray(result);

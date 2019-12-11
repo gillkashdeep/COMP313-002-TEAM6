@@ -3,6 +3,7 @@ package com.example.isitraining;
 import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
+import android.os.StrictMode;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.NotificationCompat;
@@ -11,11 +12,24 @@ import androidx.core.app.NotificationManagerCompat;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_3_ID;
 
 public class NotificationUtility {
+
+    private static final String Warning_Request_URL = "https://isitraining.000webhostapp.com/Retrive_Warnings.php";
+    InputStream is;
+    String line;
+    String result;
 
     //declaration of notification  variables
 //    public NotificationManagerCompat notificationManagerCompat;
@@ -35,15 +49,6 @@ public class NotificationUtility {
             sendAllClearNotification(context, notificationManagerCompat);
         }
 
-        try {
-            JSONObject jsonResponse = new JSONObject();
-            String warning = jsonResponse.getString("warning_Desc");
-
-            sendWarning(warning, context, notificationManagerCompat);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
         //Send Clothing Notification
         if(user_name != null){
@@ -58,6 +63,10 @@ public class NotificationUtility {
                 hc = "Hot";
                 sendClothingNotification(hc, temp, context, notificationManagerCompat);
             }
+
+            StrictMode.setThreadPolicy((new StrictMode.ThreadPolicy.Builder().permitNetwork().build()));
+
+            sendWarning(context, notificationManagerCompat);
         }
 
 
@@ -170,10 +179,36 @@ public class NotificationUtility {
         }
     }
 
-    public void sendWarning(String warning, Context context, NotificationManagerCompat notificationManagerCompat)
+    public void sendWarning(Context context, NotificationManagerCompat notificationManagerCompat)
     {
-        String warningTitle = "Warning";
-        String warningMessage = warning;
+        try
+        {
+            URL url = new URL(Warning_Request_URL);
+            HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
+
+            con.setRequestMethod("GET");
+
+            is = new BufferedInputStream(con.getInputStream());
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+            StringBuilder sb = new StringBuilder();
+
+            while((line = br.readLine()) != null )
+            {
+                sb.append(line + "\n");
+            }
+
+            result = sb.toString();
+
+            is.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        String warningTitle = "WARNING!!!!";
+        String warningMessage = result;
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_3_ID)
                 .setSmallIcon(R.drawable.ic_weather_update)
