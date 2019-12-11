@@ -41,12 +41,13 @@ public class WarningActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Delivered();
                             JSONObject jsonResponse = new JSONObject();
                             boolean success = jsonResponse.getBoolean("success");
 
                             if(success)
                             {
-                                Delivered();
+
                             }
                             else
                             {
@@ -63,10 +64,6 @@ public class WarningActivity extends AppCompatActivity {
 
                     }
                 };
-
-                Delivered();
-                Intent intent = new Intent(WarningActivity.this, HomeActivity.class);
-                WarningActivity.this.startActivity(intent);
 
                 WarningRequest warningRequest = new WarningRequest(Warning_Desc, responseListener);
                 RequestQueue queue = Volley.newRequestQueue(WarningActivity.this);

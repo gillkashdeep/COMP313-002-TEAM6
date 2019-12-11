@@ -53,15 +53,15 @@ public class AccountActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                String user_field = "Username Updated";
+                                Completed(user_field);
                                 JSONObject jsonResponse = new JSONObject();
                                 boolean success = jsonResponse.getBoolean("success");
 
                                 if(success)
                                 {
-                                    String user_field = "Username Updated";
                                     Intent intent = new Intent(AccountActivity.this, HomeActivity.class);
                                     AccountActivity.this.startActivity(intent);
-                                    Completed(user_field);
                                 }
                                 else
                                 {
@@ -91,15 +91,15 @@ public class AccountActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(String response) {
                             try {
+                                String user_field = "Email Updated";
+                                Completed(user_field);
                                 JSONObject jsonResponse = new JSONObject();
                                 boolean success = jsonResponse.getBoolean("success");
 
                                 if(success)
                                 {
-                                    String user_field = "Email Updated";
                                     Intent intent = new Intent(AccountActivity.this, HomeActivity.class);
                                     AccountActivity.this.startActivity(intent);
-                                    Completed(user_field);
                                 }
                                 else
                                 {
@@ -131,15 +131,15 @@ public class AccountActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(String response) {
                                 try {
+                                    String user_field = "Password Updated";
+                                    Completed(user_field);
                                     JSONObject jsonResponse = new JSONObject();
                                     boolean success = jsonResponse.getBoolean("success");
 
                                     if(success)
                                     {
-                                        String user_field = "Password Updated";
                                         Intent intent = new Intent(AccountActivity.this, HomeActivity.class);
                                         AccountActivity.this.startActivity(intent);
-                                        Completed(user_field);
                                     }
                                     else
                                     {

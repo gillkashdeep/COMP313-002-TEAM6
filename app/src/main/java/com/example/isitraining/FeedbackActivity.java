@@ -43,12 +43,12 @@ public class FeedbackActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Delivered();
                             JSONObject jsonResponse = new JSONObject();
                             boolean success = jsonResponse.getBoolean("success");
 
                             if(success)
                             {
-                                Delivered();
                                 Intent intent = new Intent(FeedbackActivity.this, HomeActivity.class);
                                 FeedbackActivity.this.startActivity(intent);
                             }
