@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -88,23 +89,38 @@ public class AdminAccountActivity extends AppCompatActivity {
             con.setRequestMethod("GET");
 
             is = new BufferedInputStream(con.getInputStream());
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
-        try
-        {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuilder sb = new StringBuilder();
 
-            while((br.readLine()) != null )
+            while((line = br.readLine()) != null )
             {
                 sb.append(line + "\n");
             }
-            is.close();
+
             result = sb.toString();
+            Toast.makeText(this, "data retrieve: " + result, Toast.LENGTH_SHORT).show();
+            Feedback.setText(result);
+
+//            jsa = new JSONArray(result);
+//
+//            data = new String[jsa.length()];
+//
+//            Toast.makeText(this, "jsa length: ", Toast.LENGTH_SHORT).show();
+//
+//            for(int i = 0; i < jsa.length(); i++)
+//            {
+//                jso = jsa.getJSONObject(i);
+//                data[i] = jso.getString("User_name" + "\n" + "Feedback_Desc");
+//            }
+//
+//            for(int i = 0; i < jsa.length(); i++)
+//            {
+//                Feedback.setText(jsa.length());
+//
+//            }
+
+            is.close();
         }
         catch (Exception e)
         {
@@ -113,20 +129,7 @@ public class AdminAccountActivity extends AppCompatActivity {
 
         try
         {
-            jsa = new JSONArray(result);
 
-            data = new String[jsa.length()];
-
-            for(int i = 0; i < jsa.length(); i++)
-            {
-                jso = jsa.getJSONObject(i);
-                data[i] = jso.getString("User_name" + "\n" + "Feedback_Desc");
-            }
-
-            for(int i = 0; i < jsa.length(); i++)
-            {
-                Feedback.setText(data[i]);
-            }
         }
         catch (Exception e)
         {
