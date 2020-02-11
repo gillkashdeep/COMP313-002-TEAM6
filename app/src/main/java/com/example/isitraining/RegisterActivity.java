@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
                 final String mail = eMail.getText().toString();
                 final String password = passWord.getText().toString();
                 final String passwordCheck = passWordCheck.getText().toString();
+                System.out.print("database reach!");
 
                 //Set up Response Listener
                 Response.Listener<String> responseListener = new Response.Listener<String>()
@@ -50,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Log.e("any text",response);
                             //Getting Response if adding Data to the Table was Successful
                             JSONObject jsonResponse = new JSONObject(response);
                             boolean success = jsonResponse.getBoolean("success");

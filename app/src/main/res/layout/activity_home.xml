@@ -11,6 +11,12 @@
         android:id="@+id/tbHome"
         layout="@layout/toolbar" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/account" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

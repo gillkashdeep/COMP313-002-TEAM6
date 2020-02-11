@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
                 LoginActivity.mMyAppsBundle.putString("1", user_name);
                 final String user_password = passWord.getText().toString();
                 LoginActivity.mMyAppsBundle.putString("2", user_password);
+                System.out.print("database reach!");
+
 
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override

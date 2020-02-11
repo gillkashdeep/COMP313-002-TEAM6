@@ -73,6 +73,9 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     ImageView ivDay5Weather;
 
+    String city;
+    String tempCurrentWeather ;
+    String currentWeather ;
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
 
@@ -210,6 +213,15 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
+            case R.id.share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "City -"+ city + "|Weather -" + currentWeather + "|Temprature -" + tempCurrentWeather );
+                sendIntent.setType("text/plain");
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                startActivity(shareIntent);
+                break;
+
             case R.id.goToSetting:
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivityForResult(intentSet, 1);
@@ -332,11 +344,11 @@ public class HomeActivity extends AppCompatActivity {
                     JSONObject object0WeatherArrayJson = weatherArrayJson.getJSONObject(0);
 
                     // get current weather data
-                    String city = response.getString("name");
+                    city = response.getString("name");
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
-                    String tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
-                    String currentWeather = object0WeatherArrayJson.getString("main");
+                    tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
+                    currentWeather = object0WeatherArrayJson.getString("main");
 
                     NotificationUtility notificationUtility = new NotificationUtility();
 
