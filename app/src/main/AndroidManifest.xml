@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".WarningActivity"></activity>
+        <activity android:name=".Fragment"></activity>
+        <activity android:name=".WarningActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".AdminAccountActivity" />
         <activity android:name=".AccountActivity" />
@@ -29,9 +30,10 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlertReceiver"
+        <receiver
+            android:name=".AlertReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
     </application>
 
 </manifest>

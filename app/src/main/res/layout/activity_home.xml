@@ -23,6 +23,15 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvCityHome"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:text="Toronto"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/tvDateHome"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -30,15 +39,6 @@
             android:layout_weight="1"
             android:text="Oct 20 | Sun"
             android:textAlignment="center" />
-
-        <TextView
-            android:id="@+id/tvCityHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Toronto"
-            android:textAlignment="center"
-            android:textSize="36sp"
-            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/ivPresentWeatherHome"
@@ -54,13 +54,22 @@
 
             <TextView
                 android:id="@+id/tvTemHome"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="11°C"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/windSpeed_text"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
 
             <TextView
                 android:id="@+id/tvPresentWeatherHome"

@@ -19,10 +19,10 @@ tools:context=".SettingActivity">
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="190dp"
+        android:layout_marginTop="0dp"
         android:layout_marginRight="20dp"
-        android:text="Notifications"
         android:checked="true"
+        android:text="Notifications"
         android:textSize="21sp" />
 
     <LinearLayout
@@ -50,11 +50,39 @@ tools:context=".SettingActivity">
     </LinearLayout>
 
     <Button
-    android:id="@+id/btnSaveChanges"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Save Changes"
-    android:layout_marginTop="10dp"
-    android:layout_marginLeft="20dp"
-    android:layout_marginRight="20dp"/>
+        android:id="@+id/btnSaveChanges"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:text="Save Changes" />
+    <Button
+        android:id="@+id/btnlangChanges"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:text="Change Language" />
+
+    <RadioGroup
+        android:id="@+id/GrpCtoF"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RadioButton
+            android:id="@+id/Celciusrdbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="C" />
+
+        <RadioButton
+            android:id="@+id/fahrenheitrdbtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="F" />
+    </RadioGroup>
+
+
 </LinearLayout>

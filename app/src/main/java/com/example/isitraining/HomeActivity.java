@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,6 +44,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
+
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
 import static java.lang.Integer.parseInt;
@@ -71,11 +73,18 @@ public class HomeActivity extends AppCompatActivity {
     ImageView ivDay4Weather;
 
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
+    TextView windspeedtext;
     ImageView ivDay5Weather;
 
     String city;
     String tempCurrentWeather ;
     String currentWeather ;
+    String  windspeedstr;
+    String language;
+    String temp_val;
+
+    public  SharedPreferences prefs;
+
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
 
@@ -116,6 +125,10 @@ public class HomeActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd | EEE");
         tvDateHome.setText(dateFormat.format(cal.getTime()));
+
+        windspeedtext = findViewById(R.id.windSpeed_text);
+
+
 
         // find views that relate to current weather
         tvCityHome = findViewById(R.id.tvCityHome);
@@ -249,9 +262,9 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-    String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-    String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+    String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&lang=en";
+    String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&&lang=en";
+    String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&&lang=en";
     String isNotiOn = "t";
 
     Calendar c = Calendar.getInstance();
@@ -266,10 +279,13 @@ public class HomeActivity extends AppCompatActivity {
                 String result = data.getStringExtra("result");
                 isNotiOn = result.substring(0, 1);
                 String location = result.substring(1);
-                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                temp_val = result.substring(result.length() -5);
+                System.out.println("I am substring temp"+temp_val);
+                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric" ;
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-
+               //language = "http://api.openweathermap.org/data/2.5/forecast?id=524901&lang="
+                //tvTemHome.setText(temp_val+" F");
                 getCurrentWeather();
                 get3HoursForecast();
                 get5DaysForecast();
@@ -290,6 +306,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences = getSharedPreferences("prefsAlarm", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
                 editor.putString("currentWeatherJsonUrl", currentWeatherJsonUrl);
                 editor.putString("user_name", user_name);
@@ -343,13 +360,32 @@ public class HomeActivity extends AppCompatActivity {
                     // get the first object from  weather array
                     JSONObject object0WeatherArrayJson = weatherArrayJson.getJSONObject(0);
 
+                    JSONObject windArrayJson = response.getJSONObject("wind");
+
+                   // JSONObject langArrayJson = response.getJSONObject("lang");
+
+
                     // get current weather data
                     city = response.getString("name");
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
-                    currentWeather = object0WeatherArrayJson.getString("main");
+                    int windspeed = (int)Math.floor(windArrayJson.getDouble("speed"));
+                    windspeedstr = String.valueOf(windspeed+"m/s");
 
+                    currentWeather = object0WeatherArrayJson.getString("main");
+                   // language = langArrayJson.getString("dt");
+                    //System.out.println("+++++++++++++++++++++++++"+language);
+                    Log.d("mytag","mm");
+                    Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+
+                    System.out.println("i m curr temp"+temp);
+                    //startActivity(intent);
+
+                    SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("value", String.valueOf(temp));
+                    editor.apply();
                     NotificationUtility notificationUtility = new NotificationUtility();
 
                     if (isNotiOn.equals("t"))
@@ -361,8 +397,15 @@ public class HomeActivity extends AppCompatActivity {
                     // set current weather data to views
                     tvCityHome.setText(city);
                     Picasso.get().load(iconURLCurrentWeather).into(ivPresentWeatherHome);
-                    tvTemHome.setText(tempCurrentWeather);
+                    if(temp_val!=null) {
+                        tvTemHome.setText(temp_val+"F");
+                    }
+                    else
+                    {
+                        tvTemHome.setText(tempCurrentWeather);
+                    }
                     tvPresentWeatherHome.setText(currentWeather);
+                    windspeedtext.setText(windspeedstr);
 
                 }catch (JSONException e){
                     e.printStackTrace();

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+        android:title="@string/main">
+        <EditTextPreference
+            android:key="location"
+            android:title="City Name"
+            android:inputType="text"
+            android:defaultValue="Chicago"
+            />
+
+        <ListPreference
+            android:entries="@array/country"
+            android:entryValues="@array/countryCodes"
+            android:key="countrykey"
+            android:defaultValue="@string/US"
+            android:title="Country Name"
+            android:summary=""
+            />
+
+        <ListPreference
+            android:entries="@array/unitNames"
+            android:entryValues="@array/unitcode"
+            android:key="unitcode"
+            android:defaultValue="metric"
+            android:title="@string/unit"
+            android:summary=""
+            />
+
+        <ListPreference
+            android:entries="@array/daycount"
+            android:entryValues="@array/daycountValues"
+            android:key="days"
+            android:defaultValue="14"
+            android:title="@string/daycounttitle"
+            android:summary=""
+            />
+
+        <ListPreference
+            android:entries="@array/languages"
+            android:entryValues="@array/languagecodes"
+            android:key="lang"
+            android:defaultValue="en"
+            android:title="@string/language"
+            android:summary=""
+            />
+
+
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/notification">
+
+        <CheckBoxPreference
+            android:widgetLayout="@layout/switchcombat"
+            android:title="@string/notification"
+            android:summary="@string/nsummary1"
+            android:key="notifications"
+            android:defaultValue="true" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
+
