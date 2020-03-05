@@ -80,8 +80,7 @@ public class SettingActivity extends AppCompatActivity {
                     tempValue =(temp_val-32)*9/5;
                 }
                 else {
-                    Toast.makeText(SettingActivity.this, "Please select the temp", Toast.LENGTH_LONG).show();
-
+                    tempValue = temp_val;
                 }
                 txtChangeLocation = etChangeLocation.getText().toString();
                 txtChangeCountry = etChangeCountry.getText().toString();
