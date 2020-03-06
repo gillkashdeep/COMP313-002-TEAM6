@@ -385,13 +385,16 @@ public class HomeActivity extends AppCompatActivity {
                     SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString("value", String.valueOf(temp));
+                    editor.putString("temp",tempCurrentWeather);
+                    editor.putString("city",city);
                     editor.apply();
+
                     NotificationUtility notificationUtility = new NotificationUtility();
 
                     if (isNotiOn.equals("t"))
                     {
                          //Send Raining Notification
-                         notificationUtility.sendNotification(HomeActivity.this, notificationManagerCompat, currentWeather, user_name, temp);
+                         notificationUtility.sendNotification(HomeActivity.this, notificationManagerCompat, currentWeather, user_name, temp,city);
                     }
 
                     // set current weather data to views
