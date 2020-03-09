@@ -75,10 +75,11 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     TextView windspeedtext;
     ImageView ivDay5Weather;
-
+ String result;
     String city;
     String tempCurrentWeather ;
     String currentWeather ;
+    String tempCurrentWeatherF ;
     String  windspeedstr;
     String language;
     String temp_val;
@@ -276,10 +277,10 @@ public class HomeActivity extends AppCompatActivity {
 
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
-                String result = data.getStringExtra("result");
+                 result = data.getStringExtra("result");
                 isNotiOn = result.substring(0, 1);
                 String location = result.substring(1);
-                temp_val = result.substring(result.length() -5);
+                temp_val = result.substring(result.length() -1);
                 System.out.println("I am substring temp"+temp_val);
                 currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric" ;
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
@@ -349,6 +350,7 @@ public class HomeActivity extends AppCompatActivity {
     // get current weather
     public void getCurrentWeather(){
         // establish Json request
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, currentWeatherJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -370,6 +372,7 @@ public class HomeActivity extends AppCompatActivity {
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
+                    tempCurrentWeatherF = (((int)Math.floor(mainObjectJson.getDouble("temp"))*9/5+32)) + "°F";
                     int windspeed = (int)Math.floor(windArrayJson.getDouble("speed"));
                     windspeedstr = String.valueOf(windspeed+"m/s");
 
@@ -400,8 +403,19 @@ public class HomeActivity extends AppCompatActivity {
                     // set current weather data to views
                     tvCityHome.setText(city);
                     Picasso.get().load(iconURLCurrentWeather).into(ivPresentWeatherHome);
+//                    if(temp_val=="F") {
+//                        tvTemHome.setText(tempCurrentWeatherF);
+//                    }
                     if(temp_val!=null) {
-                        tvTemHome.setText(temp_val+"F");
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTemHome.setText(tempCurrentWeatherF);
+                        }
+//                        if(temp_val!="C") {
+//                            tvTemHome.setText(tempCurrentWeather);
+//                        }
+                        else {
+                            tvTemHome.setText(tempCurrentWeather);
+                        }
                     }
                     else
                     {
@@ -451,11 +465,27 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather0 = (object0ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather0 = "http://openweathermap.org/img/wn/" + object0Weather0ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather0 = (int)Math.floor(main0ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather0F = (((int)Math.floor(main0ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
                     // set first weather data to views
                     tvTime0Home.setText(timeWeather0);
                     Picasso.get().load(iconURLWeather0).into(ivTime0WeatherHome);
-                    tvTime0WeatherHome.setText(tempWeather0);
-
+//                    tvTime0WeatherHome.setText(tempWeather0);
+                    if(temp_val!=null) {
+//                        tvTime0WeatherHome.setText(tempWeather0F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime0WeatherHome.setText(tempWeather0F);
+                        }
+//                        if(temp_val!="C") {
+//                            tvTemHome.setText(tempCurrentWeather);
+//                        }
+                        else {
+                            tvTime0WeatherHome.setText(tempWeather0);
+                        }
+                    }
+                    else
+                    {
+                        tvTime0WeatherHome.setText(tempWeather0);
+                    }
                     // get the second object from listArrayJson
                     JSONObject object1ListArrayJson = listArrayJson.getJSONObject(1);
                     // get main object from the second object
@@ -468,11 +498,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather1 = (object1ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather1 = "http://openweathermap.org/img/wn/" + object0Weather1ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather1 = (int)Math.floor(main1ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather1F = (((int)Math.floor(main1ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set second weather data to views
                     tvTime1Home.setText(timeWeather1);
                     Picasso.get().load(iconURLWeather1).into(ivTime1WeatherHome);
-                    tvTime1WeatherHome.setText(tempWeather1);
-
+//                    tvTime1WeatherHome.setText(tempWeather1);
+                    if(temp_val!=null) {
+                        tvTime1WeatherHome.setText(tempWeather1F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime1WeatherHome.setText(tempWeather1F);
+                        }
+//
+                        else {
+                            tvTime1WeatherHome.setText(tempWeather1);
+                        }
+                    }
+                    else
+                    {
+                        tvTime1WeatherHome.setText(tempWeather1);
+                    }
                     // get the third object from listArrayJson
                     JSONObject object2ListArrayJson = listArrayJson.getJSONObject(2);
                     // get main object from the second object
@@ -485,11 +530,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather2 = (object2ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather2 = "http://openweathermap.org/img/wn/" + object0Weather2ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather2 = (int)Math.floor(main2ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather2F = (((int)Math.floor(main2ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set third weather data to views
                     tvTime2Home.setText(timeWeather2);
                     Picasso.get().load(iconURLWeather2).into(ivTime2WeatherHome);
-                    tvTime2WeatherHome.setText(tempWeather2);
-
+//                    tvTime2WeatherHome.setText(tempWeather2);
+                    if(temp_val!=null) {
+//                        tvTime2WeatherHome.setText(tempWeather2F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime2WeatherHome.setText(tempWeather2F);
+                        }
+//
+                        else {
+                            tvTime2WeatherHome.setText(tempWeather2);
+                        }
+                    }
+                    else
+                    {
+                        tvTime2WeatherHome.setText(tempWeather2);
+                    }
 
                     // get the fourth object from listArrayJson
                     JSONObject object3ListArrayJson = listArrayJson.getJSONObject(3);
@@ -503,10 +563,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather3 = (object3ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather3 = "http://openweathermap.org/img/wn/" + object0Weather3ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather3 = (int)Math.floor(main3ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather3F = (((int)Math.floor(main3ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set fourth weather data to views
                     tvTime3Home.setText(timeWeather3);
                     Picasso.get().load(iconURLWeather3).into(ivTime3WeatherHome);
-                    tvTime3WeatherHome.setText(tempWeather3);
+//                    tvTime3WeatherHome.setText(tempWeather3);
+                    if(temp_val!=null) {
+//                        tvTime3WeatherHome.setText(tempWeather3F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime3WeatherHome.setText(tempWeather3F);
+                        }
+//
+                        else {
+                            tvTime3WeatherHome.setText(tempWeather3);
+                        }
+                    }
+                    else
+                    {
+                        tvTime3WeatherHome.setText(tempWeather3);
+                    }
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -618,6 +694,8 @@ public class HomeActivity extends AppCompatActivity {
                         if(dateObject.equals(dateDay1)){
                             double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
                             double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+//                            double tempMinf = Double.parseDouble(mainObjectJson.getString("temp_min"));
+//                            double tempMaxf = Double.parseDouble(mainObjectJson.getString("temp_max"));
                             tempMinArrayDay1.add(tempMin);
                             tempMaxArrayDay1.add(tempMax);
 
@@ -689,32 +767,117 @@ public class HomeActivity extends AppCompatActivity {
                     // set day1 data to views
                     tvDay1Home.setText(day1);
                     Picasso.get().load(iconURLWeatherDay1).into(ivDay1Weather);
-                    tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
-                    tvDay1LowTemHome.setText(tempMinDay1 + "°C");
-
+//                    tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
+//                    tvDay1LowTemHome.setText(tempMinDay1 + "°C");
+                    if(temp_val!=null) {
+//                        tvDay1HighTemHome.setText(tempMaxDay1*9/5+32 + "°F");
+//                        tvDay1LowTemHome.setText(tempMinDay1*9/5+32 + "°F");
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay1HighTemHome.setText(tempMaxDay1*9/5+32 + "°F");
+                            tvDay1LowTemHome.setText(tempMinDay1*9/5+32 + "°F");                        }
+//
+                        else {
+                            tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
+                            tvDay1LowTemHome.setText(tempMinDay1 + "°C");                        }}
+                    else
+                    {
+                        tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
+                        tvDay1LowTemHome.setText(tempMinDay1 + "°C");
+                    }
                     // set day2 data to views
                     tvDay2Home.setText(day2);
                     Picasso.get().load(iconURLWeatherDay2).into(ivDay2Weather);
-                    tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
-                    tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+//                    tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+//                    tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+                    if(temp_val!=null) {
+//                        tvDay2HighTemHome.setText(tempMaxDay2*9/5+32 + "°F");
+//                        tvDay2LowTemHome.setText(tempMinDay2*9/5+32 + "°F");
 
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay2HighTemHome.setText(tempMaxDay2*9/5+32 + "°F");
+                            tvDay2LowTemHome.setText(tempMinDay2*9/5+32 + "°F");                    }
+//
+                        else {
+                            tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+                            tvDay2LowTemHome.setText(tempMinDay2 + "°C");                    }}
+
+                    else
+                    {
+                        tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+                        tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+                    }
                     // set day3 data to views
                     tvDay3Home.setText(day3);
                     Picasso.get().load(iconURLWeatherDay3).into(ivDay3Weather);
-                    tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
-                    tvDay3LowTemHome.setText(tempMinDay3 + "°C");
+//                    tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+//                    tvDay3LowTemHome.setText(tempMinDay3 + "°C");
+                    if(temp_val!=null) {
+//                        tvDay3HighTemHome.setText(tempMaxDay3*9/5+32 + "°F");
+//                        tvDay3LowTemHome.setText(tempMinDay3*9/5+32 + "°F");
 
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay3HighTemHome.setText(tempMaxDay3*9/5+32 + "°F");
+                            tvDay3LowTemHome.setText(tempMinDay3*9/5+32 + "°F");                   }
+//
+                        else {
+                            tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+                            tvDay3LowTemHome.setText(tempMinDay3 + "°C");             }
+
+                    }
+                    else
+                    {
+                        tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+                        tvDay3HighTemHome.setText(tempMinDay3 + "°C");
+                    }
                     // set day4 data to views
                     tvDay4Home.setText(day4);
                     Picasso.get().load(iconURLWeatherDay4).into(ivDay4Weather);
-                    tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
-                    tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+//                    tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+//                    tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+                    if(temp_val!=null) {
+//                        tvDay4HighTemHome.setText(tempMaxDay4*9/5+32 + "°F");
+//                        tvDay4LowTemHome.setText(tempMinDay4*9/5+32 + "°F");
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay4HighTemHome.setText(tempMaxDay4*9/5+32 + "°F");
+                            tvDay4LowTemHome.setText(tempMinDay4*9/5+32 + "°F");                }
+//
+                        else {
+                            tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+                            tvDay4LowTemHome.setText(tempMinDay4 + "°C");             }
+                    }
+                    else
+                    {
+                        tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+                        tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+                    }
 
                     // set day5 data to views
                     tvDay5Home.setText(day5);
                     Picasso.get().load(iconURLWeatherDay5).into(ivDay5Weather);
-                    tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
-                    tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+//                    tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+//                    tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+                    if(temp_val!=null) {
+//                        tvDay5HighTemHome.setText(tempMaxDay5*9/5+32 + "°F");
+//                        tvDay5LowTemHome.setText(tempMinDay5*9/5+32 + "°F");
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay5HighTemHome.setText(tempMaxDay5*9/5+32 + "°F");
+                            tvDay5LowTemHome.setText(tempMinDay5*9/5+32 + "°F");
+
+
+
+                        }
+//
+                        else {
+                            tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+                            tvDay5LowTemHome.setText(tempMinDay5 + "°C");           }
+
+
+                    }
+                    else
+                    {
+                        tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+                        tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+                    }
 
 
                 }catch (JSONException e){

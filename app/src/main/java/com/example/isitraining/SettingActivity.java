@@ -29,7 +29,8 @@ public class SettingActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton radioButton;
 
-    Double tempValue;
+//    Double tempValue;
+String tempValue;
 
 
 
@@ -55,13 +56,13 @@ public class SettingActivity extends AppCompatActivity {
                 if(switchNotification.isChecked()){
                     isNotiOn = "t";
                 }else {
-                    isNotiOn = "f";
-                    switchNotification.setChecked(false);
                 }
 
                 int selectedId = radioGroup.getCheckedRadioButtonId();
 
                 radioButton = (RadioButton) findViewById(selectedId);
+                isNotiOn = "f";
+                    switchNotification.setChecked(false);
                 radioButton.getText();
                 System.out.println("+++++++"+radioButton.getText());
 
@@ -69,18 +70,25 @@ public class SettingActivity extends AppCompatActivity {
                 String str = intent.getStringExtra("temp_val");
                 SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
                 String value = sharedPreferences.getString("value","");
+
+//                String temp_val;
                 double temp_val = Double.valueOf(value);
 
                 if(radioButton.getText().equals("F"))
                 {
-                  tempValue = temp_val *9/5+32;
+//                  tempValue = temp_val *9/5+32;
+//                    tempValue =temp_val;
+                    tempValue   = "F";
                 }
                 else if(radioButton.getText().equals("C"))
                 {
-                    tempValue =(temp_val-32)*9/5;
+//                    tempValue =(temp_val-32)*9/5;
+
+                    tempValue   = "C";
                 }
                 else {
-                    tempValue = temp_val;
+//                    tempValue = temp_val;
+                    tempValue   =value;
                 }
                 txtChangeLocation = etChangeLocation.getText().toString();
                 txtChangeCountry = etChangeCountry.getText().toString();
