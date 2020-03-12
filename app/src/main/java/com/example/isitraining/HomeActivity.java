@@ -10,11 +10,14 @@ import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -47,9 +50,11 @@ import org.json.JSONObject;
 import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+
 
 
 
@@ -269,9 +274,12 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivityForResult(intentSet, 1);
                 break;
-            case R.id.goToLogin:
-                Intent intentLogin = new Intent(this,LoginActivity.class);
-                startActivity(intentLogin);
+//            case R.id.goToLogin:
+//                Intent intentLogin = new Intent(this,LoginActivity.class);
+//                startActivity(intentLogin);
+//                break;
+            case R.id.add:
+                addSchedule();
                 break;
             case R.id.goToSettingAfterLogin:
             case R.id.goToSettingAfterLogin_Admin:
@@ -366,6 +374,26 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+    private void addSchedule()
+    {
+        Calendar calendarEvent = Calendar.getInstance();
+        Intent intent=new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+        intent.putExtra("beginTime", calendarEvent.getTimeInMillis());
+        intent.putExtra("endTime", calendarEvent.getTimeInMillis() + 60 * 60 * 1000);
+        intent.putExtra("title", "sample Event");
+        intent.putExtra("allDay",true);
+        intent.putExtra("rule", "FREQ=YEARLY");
+        startActivity(intent);
+
+    }
+
+
+
 
     private void startAlarm(Calendar c){
         Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();

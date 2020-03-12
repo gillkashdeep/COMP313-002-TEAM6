@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/add"
+        android:icon="@drawable/add_icon_s"
+        android:title="share"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/share"
         android:icon="@drawable/share_logo"
         android:title="share"
@@ -13,10 +18,13 @@
         android:icon="@drawable/settings"
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/goToLogin"
-        android:title="Go to Login Page"
-        android:icon="@drawable/icon_login"
-        app:showAsAction="ifRoom"/>
+<!--    <item-->
+<!--        android:id="@+id/goToLogin"-->
+<!--        android:title="Go to Login Page"-->
+<!--        android:icon="@drawable/icon_login"-->
+<!--        android:visible="false"-->
+<!--        app:showAsAction="ifRoom"/>-->
+
+
 
 </menu>

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".Fragment"></activity>
+        <activity android:name=".Fragment" />
         <activity android:name=".WarningActivity" />
         <activity android:name=".FeedbackActivity" />
         <activity android:name=".AdminAccountActivity" />
