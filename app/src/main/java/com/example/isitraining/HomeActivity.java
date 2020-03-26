@@ -3,17 +3,23 @@ package com.example.isitraining;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,12 +41,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+//import com.karumi.dexter.Dexter;
+//import com.karumi.dexter.PermissionToken;
+//import com.karumi.dexter.listener.PermissionDeniedResponse;
+//import com.karumi.dexter.listener.PermissionGrantedResponse;
+//import com.karumi.dexter.listener.PermissionRequest;
+//import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -96,8 +102,10 @@ public class HomeActivity extends AppCompatActivity {
     String  windspeedstr;
     String language;
     String temp_val;
-
+     int  MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     public  SharedPreferences prefs;
+    public static final String CHANNEL_g_ID = "notifyWeatherReminder";
+
 
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
@@ -106,7 +114,20 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        checkPermission();
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+          // ContextCompat.requestPermissions(t);
+            System.out.println("not granted");
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+        }
+        else{
+            System.out.println("granted");
+
+            getevents();
+        }
+        //checkPermission();
         //Get users name
         Intent intent = getIntent();
         try
@@ -151,6 +172,7 @@ public class HomeActivity extends AppCompatActivity {
         tvPresentWeatherHome = findViewById(R.id.tvPresentWeatherHome);
         // get current weather method
         getCurrentWeather();
+//        getSchedule();
 
         notificationManagerCompat = NotificationManagerCompat.from(this);
 
@@ -200,30 +222,12 @@ public class HomeActivity extends AppCompatActivity {
         tvDay5LowTemHome = findViewById(R.id.tvDay5LowTemHome);
         // get 5 days forecast method
         get5DaysForecast();
+
+
     }
 
     String user_name;
 
-    public void checkPermission(){
-        Dexter.withActivity(this)
-                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted(PermissionGrantedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionDenied(PermissionDeniedResponse response) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
-
-                    }
-                }).check();
-    }
 
     // add menu to toolbar
     @Override
@@ -379,6 +383,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void addSchedule()
     {
+
         Calendar calendarEvent = Calendar.getInstance();
         Intent intent=new Intent(Intent.ACTION_EDIT);
         intent.setType("vnd.android.cursor.item/event");
@@ -389,11 +394,69 @@ public class HomeActivity extends AppCompatActivity {
         intent.putExtra("allDay",true);
         intent.putExtra("rule", "FREQ=YEARLY");
         startActivity(intent);
-
     }
 
 
 
+    private  void getevents()
+    {
+        Date currentTime = Calendar.getInstance().getTime();
+        long date = currentTime.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String curdate = df.format(date);
+        Cursor cursor = getContentResolver().query(Uri.parse("content://com.android.calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
+        //Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
+        String add = null;
+        cursor.moveToFirst();
+        String[] CalNames = new String[cursor.getCount()];
+        int[] CalIds = new int[cursor.getCount()];
+        long[] dateTime = new long[cursor.getCount()];
+        for (int i = 0; i < CalNames.length; i++) {
+            CalIds[i] = cursor.getInt(0);
+            dateTime[i] = cursor.getLong(3);
+            CalNames[i] = "Event"+cursor.getInt(0)+": \nTitle: "+ cursor.getString(1)+"\nDescription: "+cursor.getString(2)+"\nStart Date: "+new Date(cursor.getLong(3))+"\nEnd Date : "+new Date(cursor.getLong(4))+"\nLocation : "+cursor.getString(5);
+            if(add == null) {
+                add = CalNames[i];
+               // System.out.println("+++events+++"+cursor.getLong(3));
+
+            }
+
+            else{
+                add += CalNames[i];
+            }
+
+            cursor.moveToNext();
+        }
+        System.out.println("array lenght:"+CalNames.length);
+        for(int i =0;i<CalNames.length;i++)
+        {
+            String formattedDate = df.format(dateTime[i]);
+            System.out.println("date only"+formattedDate);
+            System.out.println("todays date only"+curdate);
+            if(formattedDate.equals(curdate))
+            {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_g_ID)
+                        .setContentTitle("Event Reminder")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
+
+                System.out.println("current event");
+
+            }
+            System.out.println("current event none");
+
+        }
+
+        cursor.close();
+    }
+
+
+    protected void onStart() {
+        super.onStart();
+        getDelegate().onStart();
+        getevents();
+        System.out.println("start dfunction claaed");
+    }
 
     private void startAlarm(Calendar c){
         Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
