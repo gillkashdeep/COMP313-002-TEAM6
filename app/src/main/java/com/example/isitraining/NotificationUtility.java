@@ -33,7 +33,6 @@ public class NotificationUtility extends AppCompatActivity {
     String result;
 
     //declaration of notification  variables
-//    public NotificationManagerCompat notificationManagerCompat;
 
     public void sendNotification(Context context, NotificationManagerCompat notificationManagerCompat, String currentWeather, String user_name, int temp, String city){
         //Send Raining Notification
@@ -163,14 +162,9 @@ public class NotificationUtility extends AppCompatActivity {
 
     public void sendAllClearNotification(Context context, NotificationManagerCompat notificationManagerCompat, int temp,String  city)
     {
-//        Intent intent = getIntent();
-//        String temp = intent.getStringExtra("temp");
-//        String city = intent.getStringExtra("city");
-
 
 
         String clearTitle = "Hey It Looks Great Outside!";
-        //String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!";
         String clearMessage = "It All Clear Outside! STAY HOME SAFE!" +"\n Temp:"+temp+",City:"+city;
 
 

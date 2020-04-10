@@ -29,8 +29,7 @@ public class SettingActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton radioButton;
 
-//    Double tempValue;
-String tempValue;
+    String tempValue;
 
 
 
@@ -71,23 +70,18 @@ String tempValue;
                 SharedPreferences sharedPreferences = getSharedPreferences("myKey", MODE_PRIVATE);
                 String value = sharedPreferences.getString("value","");
 
-//                String temp_val;
                 double temp_val = Double.valueOf(value);
 
                 if(radioButton.getText().equals("F"))
                 {
-//                  tempValue = temp_val *9/5+32;
-//                    tempValue =temp_val;
                     tempValue   = "F";
                 }
                 else if(radioButton.getText().equals("C"))
                 {
-//                    tempValue =(temp_val-32)*9/5;
 
                     tempValue   = "C";
                 }
                 else {
-//                    tempValue = temp_val;
                     tempValue   =value;
                 }
                 txtChangeLocation = etChangeLocation.getText().toString();

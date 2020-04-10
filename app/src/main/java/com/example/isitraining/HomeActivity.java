@@ -7,14 +7,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,55 +17,31 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.CalendarContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-//import com.karumi.dexter.Dexter;
-//import com.karumi.dexter.PermissionToken;
-//import com.karumi.dexter.listener.PermissionDeniedResponse;
-//import com.karumi.dexter.listener.PermissionGrantedResponse;
-//import com.karumi.dexter.listener.PermissionRequest;
-//import com.karumi.dexter.listener.single.PermissionListener;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-
-import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
-import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
-import static java.lang.Integer.parseInt;
-import static java.lang.Integer.toString;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -127,8 +98,7 @@ public class HomeActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
                 != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-          // ContextCompat.requestPermissions(t);
+
             System.out.println("not granted");
             ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
 
@@ -136,9 +106,7 @@ public class HomeActivity extends AppCompatActivity {
         else{
             System.out.println("granted");
         }
-        //getevents();
-        //checkPermission();
-        //Get users name
+
 
         Intent intent = getIntent();
         try
@@ -187,8 +155,6 @@ public class HomeActivity extends AppCompatActivity {
         tvPresentWeatherHome = findViewById(R.id.tvPresentWeatherHome);
         // get current weather method
         getCurrentWeather();
-//        getSchedule();
-
         getcovidData();
         notificationManagerCompat = NotificationManagerCompat.from(this);
 
@@ -987,11 +953,9 @@ public class HomeActivity extends AppCompatActivity {
                     // set day1 data to views
                     tvDay1Home.setText(day1);
                     Picasso.get().load(iconURLWeatherDay1).into(ivDay1Weather);
-//                    tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
-//                    tvDay1LowTemHome.setText(tempMinDay1 + "°C");
+
                     if(temp_val!=null) {
-//                        tvDay1HighTemHome.setText(tempMaxDay1*9/5+32 + "°F");
-//                        tvDay1LowTemHome.setText(tempMinDay1*9/5+32 + "°F");
+
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvDay1HighTemHome.setText(tempMaxDay1*9/5+32 + "°F");
                             tvDay1LowTemHome.setText(tempMinDay1*9/5+32 + "°F");                        }
@@ -1007,11 +971,9 @@ public class HomeActivity extends AppCompatActivity {
                     // set day2 data to views
                     tvDay2Home.setText(day2);
                     Picasso.get().load(iconURLWeatherDay2).into(ivDay2Weather);
-//                    tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
-//                    tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+
                     if(temp_val!=null) {
-//                        tvDay2HighTemHome.setText(tempMaxDay2*9/5+32 + "°F");
-//                        tvDay2LowTemHome.setText(tempMinDay2*9/5+32 + "°F");
+
 
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvDay2HighTemHome.setText(tempMaxDay2*9/5+32 + "°F");
@@ -1029,11 +991,8 @@ public class HomeActivity extends AppCompatActivity {
                     // set day3 data to views
                     tvDay3Home.setText(day3);
                     Picasso.get().load(iconURLWeatherDay3).into(ivDay3Weather);
-//                    tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
-//                    tvDay3LowTemHome.setText(tempMinDay3 + "°C");
+
                     if(temp_val!=null) {
-//                        tvDay3HighTemHome.setText(tempMaxDay3*9/5+32 + "°F");
-//                        tvDay3LowTemHome.setText(tempMinDay3*9/5+32 + "°F");
 
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvDay3HighTemHome.setText(tempMaxDay3*9/5+32 + "°F");
@@ -1052,11 +1011,9 @@ public class HomeActivity extends AppCompatActivity {
                     // set day4 data to views
                     tvDay4Home.setText(day4);
                     Picasso.get().load(iconURLWeatherDay4).into(ivDay4Weather);
-//                    tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
-//                    tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+
                     if(temp_val!=null) {
-//                        tvDay4HighTemHome.setText(tempMaxDay4*9/5+32 + "°F");
-//                        tvDay4LowTemHome.setText(tempMinDay4*9/5+32 + "°F");
+
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvDay4HighTemHome.setText(tempMaxDay4*9/5+32 + "°F");
                             tvDay4LowTemHome.setText(tempMinDay4*9/5+32 + "°F");                }
@@ -1074,19 +1031,15 @@ public class HomeActivity extends AppCompatActivity {
                     // set day5 data to views
                     tvDay5Home.setText(day5);
                     Picasso.get().load(iconURLWeatherDay5).into(ivDay5Weather);
-//                    tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
-//                    tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+
                     if(temp_val!=null) {
-//                        tvDay5HighTemHome.setText(tempMaxDay5*9/5+32 + "°F");
-//                        tvDay5LowTemHome.setText(tempMinDay5*9/5+32 + "°F");
+
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvDay5HighTemHome.setText(tempMaxDay5*9/5+32 + "°F");
                             tvDay5LowTemHome.setText(tempMinDay5*9/5+32 + "°F");
 
-
-
                         }
-//
+
                         else {
                             tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
                             tvDay5LowTemHome.setText(tempMinDay5 + "°C");           }
