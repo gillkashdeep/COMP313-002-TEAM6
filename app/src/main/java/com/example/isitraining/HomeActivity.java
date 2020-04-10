@@ -35,9 +35,12 @@ import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
@@ -60,13 +63,14 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-
-
+import java.util.HashMap;
+import java.util.Map;
 
 
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.toString;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -91,6 +95,8 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay4Home, tvDay4HighTemHome, tvDay4LowTemHome;
     ImageView ivDay4Weather;
 
+    TextView cases,deaths;
+
     TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
     TextView windspeedtext;
     ImageView ivDay5Weather;
@@ -102,6 +108,7 @@ public class HomeActivity extends AppCompatActivity {
     String  windspeedstr;
     String language;
     String temp_val;
+    String location= "Toronto";
      int  MY_PERMISSIONS_REQUEST_READ_CONTACTS;
     public  SharedPreferences prefs;
     public static final String CHANNEL_g_ID = "notifyWeatherReminder";
@@ -114,6 +121,10 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+
+        startService(new Intent(this, MyService.class));
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
                 != PackageManager.PERMISSION_GRANTED) {
             // Permission is not granted
@@ -124,11 +135,11 @@ public class HomeActivity extends AppCompatActivity {
         }
         else{
             System.out.println("granted");
-
-            getevents();
         }
+        //getevents();
         //checkPermission();
         //Get users name
+
         Intent intent = getIntent();
         try
         {
@@ -149,6 +160,10 @@ public class HomeActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+
+         cases = findViewById(R.id.Cases);
+         deaths = findViewById(R.id.Deaths);
+
 
         // set toolbar title
         Toolbar tbHome = findViewById(R.id.tbHome);
@@ -174,6 +189,7 @@ public class HomeActivity extends AppCompatActivity {
         getCurrentWeather();
 //        getSchedule();
 
+        getcovidData();
         notificationManagerCompat = NotificationManagerCompat.from(this);
 
         // find views that relate to 3 hours forecast
@@ -278,10 +294,7 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivityForResult(intentSet, 1);
                 break;
-//            case R.id.goToLogin:
-//                Intent intentLogin = new Intent(this,LoginActivity.class);
-//                startActivity(intentLogin);
-//                break;
+
             case R.id.add:
                 addSchedule();
                 break;
@@ -309,6 +322,8 @@ public class HomeActivity extends AppCompatActivity {
     String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&&lang=en";
     String isNotiOn = "t";
 
+
+
     Calendar c = Calendar.getInstance();
 
     // when other activity send result (information) to this activity, use this method to get the result
@@ -320,14 +335,13 @@ public class HomeActivity extends AppCompatActivity {
             if(resultCode == RESULT_OK){
                  result = data.getStringExtra("result");
                 isNotiOn = result.substring(0, 1);
-                String location = result.substring(1);
+                 location = result.substring(1);
                 temp_val = result.substring(result.length() -1);
                 System.out.println("I am substring temp"+temp_val);
                 currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric" ;
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-               //language = "http://api.openweathermap.org/data/2.5/forecast?id=524901&lang="
-                //tvTemHome.setText(temp_val+" F");
+                getcovidData();
                 getCurrentWeather();
                 get3HoursForecast();
                 get5DaysForecast();
@@ -417,7 +431,6 @@ public class HomeActivity extends AppCompatActivity {
             CalNames[i] = "Event"+cursor.getInt(0)+": \nTitle: "+ cursor.getString(1)+"\nDescription: "+cursor.getString(2)+"\nStart Date: "+new Date(cursor.getLong(3))+"\nEnd Date : "+new Date(cursor.getLong(4))+"\nLocation : "+cursor.getString(5);
             if(add == null) {
                 add = CalNames[i];
-               // System.out.println("+++events+++"+cursor.getLong(3));
 
             }
 
@@ -451,13 +464,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    protected void onStart() {
-        super.onStart();
-        getDelegate().onStart();
-        getevents();
-        System.out.println("start dfunction claaed");
-    }
-
     private void startAlarm(Calendar c){
         Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -465,6 +471,108 @@ public class HomeActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    //get covid data
+
+    public  void getcovidData()
+    {
+        String cc = "Ontario";
+        System.out.println("location+++"+ location);
+        if(location.equals("Vancouver,ca,C")||location.equals("victoria,ca,C"))
+        {
+            cc = "british columbia";
+            System.out.print(cc);
+
+        }
+
+       else if(location.equals("Quebec,ca,C")||location.equals("Montreal,ca,C"))
+        {
+            cc = "quebec";
+        }
+
+        else if(location.equals("Winnipeg,ca,C"))
+        {
+            cc = "manitoba";
+        }
+
+        else if(location.equals("Calgary,ca,C")||location.equals("Edmonton,ca,C"))
+        {
+            cc = "alberta";
+        }
+
+        else if(location.equals("Windsor,ca,C")||location.equals("Scarborough,ca,C") ||location.equals("whitby,ca,C")  )
+        {
+            cc = "ontario";
+        }
+
+
+        String datacovid ="https://corona.lmao.ninja/v2/historical/canada/"+cc+"?lastdays=1";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, datacovid, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    String mainObjectJson= response.getString("timeline");
+                    System.out.println("+++++++wwwwww");
+                    String[] covid = mainObjectJson.split("[}]");
+                    System.out.println(covid);
+                    String StrCases = new String();
+                    String StrDeaths = new String();
+                    String[] casesc = new String[100];
+
+                        for(int i =0; i<covid.length;i++)
+                        {
+
+                            casesc = covid[i].split(":");
+
+                            if( covid[i].indexOf("cases") > -1) {
+                                System.out.println(covid[i]);
+                                StrCases = casesc[2];
+
+                             }
+                            else if(covid[i].indexOf("deaths") > -1)
+                            {
+                                StrDeaths = casesc[2];
+
+                            }
+                    }
+
+
+                        cases.setText("Corona Cases:"+StrCases);
+                        deaths.setText("Deaths:"+StrDeaths);
+
+
+                }catch (JSONException e){
+
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                System.out.println(error);
+
+            }
+
+        }
+        )
+
+        {
+
+        };
+        RequestQueue queueCurrentWeather = Volley.newRequestQueue(this);
+        queueCurrentWeather.add(jsonObjectRequest);
+
+        System.out.println(queueCurrentWeather);
+
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
     }
 
     // get current weather
@@ -484,7 +592,6 @@ public class HomeActivity extends AppCompatActivity {
 
                     JSONObject windArrayJson = response.getJSONObject("wind");
 
-                   // JSONObject langArrayJson = response.getJSONObject("lang");
 
 
                     // get current weather data
@@ -497,8 +604,7 @@ public class HomeActivity extends AppCompatActivity {
                     windspeedstr = String.valueOf(windspeed+"m/s");
 
                     currentWeather = object0WeatherArrayJson.getString("main");
-                   // language = langArrayJson.getString("dt");
-                    //System.out.println("+++++++++++++++++++++++++"+language);
+
                     Log.d("mytag","mm");
                     Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
 
@@ -523,16 +629,12 @@ public class HomeActivity extends AppCompatActivity {
                     // set current weather data to views
                     tvCityHome.setText(city);
                     Picasso.get().load(iconURLCurrentWeather).into(ivPresentWeatherHome);
-//                    if(temp_val=="F") {
-//                        tvTemHome.setText(tempCurrentWeatherF);
-//                    }
+
                     if(temp_val!=null) {
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvTemHome.setText(tempCurrentWeatherF);
                         }
-//                        if(temp_val!="C") {
-//                            tvTemHome.setText(tempCurrentWeather);
-//                        }
+
                         else {
                             tvTemHome.setText(tempCurrentWeather);
                         }
@@ -595,9 +697,7 @@ public class HomeActivity extends AppCompatActivity {
                         if(temp_val.equalsIgnoreCase("F")) {
                             tvTime0WeatherHome.setText(tempWeather0F);
                         }
-//                        if(temp_val!="C") {
-//                            tvTemHome.setText(tempCurrentWeather);
-//                        }
+//
                         else {
                             tvTime0WeatherHome.setText(tempWeather0);
                         }

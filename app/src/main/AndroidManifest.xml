@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <service android:enabled="true" android:name=".MyService">
+        </service>
         <activity android:name=".Fragment" />
         <activity android:name=".WarningActivity" />
         <activity android:name=".FeedbackActivity" />
@@ -31,6 +33,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
         <receiver

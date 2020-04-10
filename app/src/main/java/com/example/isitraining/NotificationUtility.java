@@ -171,7 +171,7 @@ public class NotificationUtility extends AppCompatActivity {
 
         String clearTitle = "Hey It Looks Great Outside!";
         //String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!";
-        String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!" +"\n Temp:"+temp+",City:"+city;
+        String clearMessage = "It All Clear Outside! STAY HOME SAFE!" +"\n Temp:"+temp+",City:"+city;
 
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
