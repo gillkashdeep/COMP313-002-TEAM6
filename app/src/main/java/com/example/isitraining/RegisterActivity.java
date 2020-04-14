@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -22,19 +23,22 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private EditText userName, eMail, passWord, passWordCheck;
+    DatabaseHelper myDb;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        final EditText userName = findViewById(R.id.txtUserName);
-        final EditText eMail = findViewById(R.id.txtMail);
-        final EditText passWord = findViewById(R.id.txtSetPass);
-        final EditText passWordCheck = findViewById(R.id.txtRepeatPass);
+        myDb=new DatabaseHelper(this);
+        userName = findViewById(R.id.txtUserName);
+        eMail = findViewById(R.id.txtMail);
+        passWord = findViewById(R.id.txtSetPass);
+        passWordCheck = findViewById(R.id.txtRepeatPass);
 
         final Button bRegister = findViewById(R.id.btnRegister);
 
-        //Set OnClickListener
+        /*//Set OnClickListener
         bRegister.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -79,30 +83,51 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 };
 
-                //Check If Password Matches Previous Entry
-                if (password.matches(passwordCheck))
-                {
-                    //Sending The Request
-                    RegisterRequest registerRequest = new RegisterRequest(username, mail, password, responseListener);
-                    RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
-                    queue.add(registerRequest);
-                }
-                else
-                {
-                    //If Password Is Not The Same
-                    AlertDialog.Builder passFail = new AlertDialog.Builder(RegisterActivity.this);
-                    passFail.setMessage("Passwords Do Not Match")
-                            .setNegativeButton("Retry", null)
-                            .create()
-                            .show();
-                }
+
 
             }
         });
+
+         */
+
+       /* //Check If Password Matches Previous Entry
+        if (password.matches(passwordCheck))
+        {
+        //Sending The Request
+        RegisterRequest registerRequest = new RegisterRequest(username, mail, password, responseListener);
+        RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
+        queue.add(registerRequest);
+        }
+        else
+        {
+        //If Password Is Not The Same
+        AlertDialog.Builder passFail = new AlertDialog.Builder(RegisterActivity.this);
+        passFail.setMessage("Passwords Do Not Match")
+        .setNegativeButton("Retry", null)
+        .create()
+        .show();
+        }*/
 
         // set toolbar title
         Toolbar tbRegister = findViewById(R.id.tbRegister);
         setSupportActionBar(tbRegister);
         Objects.requireNonNull(getSupportActionBar()).setTitle("Register");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    //insert into
+    public void addTask(View view){
+        String uName=userName.getText().toString();
+        String mail= eMail.getText().toString();
+        String pass = passWord.getText().toString();
+        //String passCheck = passWordCheck.getText().toString();
+        boolean isInserted = myDb.insertData(uName,mail,pass);
+        if(isInserted == true){
+            Toast.makeText(this, "User Created", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this, "Please Try Again", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

@@ -3,27 +3,29 @@ package com.example.isitraining;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
+import androidx.core.content.ContextCompat;
+import android.Manifest;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.provider.CalendarContract;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -31,21 +33,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.Console;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 
-import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
-import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
-import static java.lang.Integer.parseInt;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -70,12 +66,25 @@ public class HomeActivity extends AppCompatActivity {
     TextView tvDay4Home, tvDay4HighTemHome, tvDay4LowTemHome;
     ImageView ivDay4Weather;
 
-    TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
-    ImageView ivDay5Weather;
+    TextView cases,deaths;
 
+    TextView tvDay5Home, tvDay5HighTemHome, tvDay5LowTemHome;
+    TextView windspeedtext;
+    ImageView ivDay5Weather;
+ String result;
     String city;
     String tempCurrentWeather ;
     String currentWeather ;
+    String tempCurrentWeatherF ;
+    String  windspeedstr;
+    String language;
+    String temp_val;
+    String location= "Toronto";
+     int  MY_PERMISSIONS_REQUEST_READ_CONTACTS;
+    public  SharedPreferences prefs;
+    public static final String CHANNEL_g_ID = "notifyWeatherReminder";
+
+
     //declaration of notification  variables
     private NotificationManagerCompat notificationManagerCompat;
 
@@ -84,27 +93,26 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        //Get users name
+
+        startService(new Intent(this, MyService.class));
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALENDAR)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            System.out.println("not granted");
+            ActivityCompat.requestPermissions(this,new String[]{Manifest.permission.READ_CALENDAR}, MY_PERMISSIONS_REQUEST_READ_CONTACTS);
+
+        }
+        else{
+            System.out.println("granted");
+        }
+
+
         Intent intent = getIntent();
-        try
-        {
-            String user_name = intent.getStringExtra("user_name");
-            //Toast Hello
-            if (user_name == null)
-            {
-                Toast.makeText(this,  "Welcome Guest",
-                        Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Toast.makeText(this,  "Welcome Back " + user_name,
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-        catch (NullPointerException e)
-        {
-            e.printStackTrace();
-        }
+
+         cases = findViewById(R.id.Cases);
+         deaths = findViewById(R.id.Deaths);
+
 
         // set toolbar title
         Toolbar tbHome = findViewById(R.id.tbHome);
@@ -117,6 +125,10 @@ public class HomeActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd | EEE");
         tvDateHome.setText(dateFormat.format(cal.getTime()));
 
+        windspeedtext = findViewById(R.id.windSpeed_text);
+
+
+
         // find views that relate to current weather
         tvCityHome = findViewById(R.id.tvCityHome);
         ivPresentWeatherHome = findViewById(R.id.ivPresentWeatherHome);
@@ -124,7 +136,7 @@ public class HomeActivity extends AppCompatActivity {
         tvPresentWeatherHome = findViewById(R.id.tvPresentWeatherHome);
         // get current weather method
         getCurrentWeather();
-
+        getcovidData();
         notificationManagerCompat = NotificationManagerCompat.from(this);
 
         // find views that relate to 3 hours forecast
@@ -173,9 +185,12 @@ public class HomeActivity extends AppCompatActivity {
         tvDay5LowTemHome = findViewById(R.id.tvDay5LowTemHome);
         // get 5 days forecast method
         get5DaysForecast();
+
+
     }
 
     String user_name;
+
 
     // add menu to toolbar
     @Override
@@ -226,11 +241,15 @@ public class HomeActivity extends AppCompatActivity {
                 Intent intentSet = new Intent(this,SettingActivity.class);
                 startActivityForResult(intentSet, 1);
                 break;
-            case R.id.goToLogin:
-                Intent intentLogin = new Intent(this,LoginActivity.class);
-                startActivity(intentLogin);
+
+            case R.id.add:
+                addSchedule();
                 break;
-            case R.id.goToSettingAfterLogin:
+            case R.id.goToLogin:
+                Intent intentLog = new Intent(this,LoginActivity.class);
+                startActivityForResult(intentLog, 1);
+                break;
+
             case R.id.goToSettingAfterLogin_Admin:
                 Intent intentSetAfterLogin = new Intent(this,SettingActivityAfterLogin.class);
                 startActivityForResult(intentSetAfterLogin, 2);
@@ -249,10 +268,12 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
-    String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-    String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-    String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+    String currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&lang=en";
+    String threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&&lang=en";
+    String fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=Toronto,ca&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric&&lang=en";
     String isNotiOn = "t";
+
+
 
     Calendar c = Calendar.getInstance();
 
@@ -263,13 +284,15 @@ public class HomeActivity extends AppCompatActivity {
 
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
-                String result = data.getStringExtra("result");
+                 result = data.getStringExtra("result");
                 isNotiOn = result.substring(0, 1);
-                String location = result.substring(1);
-                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
+                 location = result.substring(1);
+                temp_val = result.substring(result.length() -1);
+                System.out.println("I am substring temp"+temp_val);
+                currentWeatherJsonUrl = "http://api.openweathermap.org/data/2.5/weather?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric" ;
                 threeHoursForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
                 fiveDaysForecastJsonUrl = "http://api.openweathermap.org/data/2.5/forecast?q=" + location + "&appid=5dd7fde31d13e47b91a429b41e79b21d&units=metric";
-
+                getcovidData();
                 getCurrentWeather();
                 get3HoursForecast();
                 get5DaysForecast();
@@ -290,6 +313,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 SharedPreferences sharedPreferences = getSharedPreferences("prefsAlarm", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
+
 
                 editor.putString("currentWeatherJsonUrl", currentWeatherJsonUrl);
                 editor.putString("user_name", user_name);
@@ -320,6 +344,77 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
+
+
+    private void addSchedule()
+    {
+
+        Calendar calendarEvent = Calendar.getInstance();
+        Intent intent=new Intent(Intent.ACTION_EDIT);
+        intent.setType("vnd.android.cursor.item/event");
+        intent.setData(CalendarContract.Events.CONTENT_URI);
+        intent.putExtra("beginTime", calendarEvent.getTimeInMillis());
+        intent.putExtra("endTime", calendarEvent.getTimeInMillis() + 60 * 60 * 1000);
+        intent.putExtra("title", "sample Event");
+        intent.putExtra("allDay",true);
+        intent.putExtra("rule", "FREQ=YEARLY");
+        startActivity(intent);
+    }
+
+
+
+    private  void getevents()
+    {
+        Date currentTime = Calendar.getInstance().getTime();
+        long date = currentTime.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String curdate = df.format(date);
+        Cursor cursor = getContentResolver().query(Uri.parse("content://com.android.calendar/events"), new String[]{ "calendar_id", "title", "description", "dtstart", "dtend", "eventLocation" }, null, null, null);
+        //Cursor cursor = cr.query(Uri.parse("content://calendar/calendars"), new String[]{ "_id", "name" }, null, null, null);
+        String add = null;
+        cursor.moveToFirst();
+        String[] CalNames = new String[cursor.getCount()];
+        int[] CalIds = new int[cursor.getCount()];
+        long[] dateTime = new long[cursor.getCount()];
+        for (int i = 0; i < CalNames.length; i++) {
+            CalIds[i] = cursor.getInt(0);
+            dateTime[i] = cursor.getLong(3);
+            CalNames[i] = "Event"+cursor.getInt(0)+": \nTitle: "+ cursor.getString(1)+"\nDescription: "+cursor.getString(2)+"\nStart Date: "+new Date(cursor.getLong(3))+"\nEnd Date : "+new Date(cursor.getLong(4))+"\nLocation : "+cursor.getString(5);
+            if(add == null) {
+                add = CalNames[i];
+
+            }
+
+            else{
+                add += CalNames[i];
+            }
+
+            cursor.moveToNext();
+        }
+        System.out.println("array lenght:"+CalNames.length);
+        for(int i =0;i<CalNames.length;i++)
+        {
+            String formattedDate = df.format(dateTime[i]);
+            System.out.println("date only"+formattedDate);
+            System.out.println("todays date only"+curdate);
+            if(formattedDate.equals(curdate))
+            {
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_g_ID)
+                        .setContentTitle("Event Reminder")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
+
+                System.out.println("current event");
+
+            }
+            System.out.println("current event none");
+
+        }
+
+        cursor.close();
+    }
+
+
     private void startAlarm(Calendar c){
         Toast.makeText(this, "startAlarm" , Toast.LENGTH_SHORT).show();
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -329,9 +424,112 @@ public class HomeActivity extends AppCompatActivity {
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
     }
 
+    //get covid data
+
+    public  void getcovidData()
+    {
+        String cc = "Ontario";
+        System.out.println("location+++"+ location);
+        if(location.equals("Vancouver,ca,C")||location.equals("victoria,ca,C"))
+        {
+            cc = "british columbia";
+            System.out.print(cc);
+
+        }
+
+       else if(location.equals("Quebec,ca,C")||location.equals("Montreal,ca,C"))
+        {
+            cc = "quebec";
+        }
+
+        else if(location.equals("Winnipeg,ca,C"))
+        {
+            cc = "manitoba";
+        }
+
+        else if(location.equals("Calgary,ca,C")||location.equals("Edmonton,ca,C"))
+        {
+            cc = "alberta";
+        }
+
+        else if(location.equals("Windsor,ca,C")||location.equals("Scarborough,ca,C") ||location.equals("whitby,ca,C")  )
+        {
+            cc = "ontario";
+        }
+
+
+        String datacovid ="https://corona.lmao.ninja/v2/historical/canada/"+cc+"?lastdays=1";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, datacovid, null, new Response.Listener<JSONObject>() {
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try{
+                    String mainObjectJson= response.getString("timeline");
+                    System.out.println("+++++++wwwwww");
+                    String[] covid = mainObjectJson.split("[}]");
+                    System.out.println(covid);
+                    String StrCases = new String();
+                    String StrDeaths = new String();
+                    String[] casesc = new String[100];
+
+                        for(int i =0; i<covid.length;i++)
+                        {
+
+                            casesc = covid[i].split(":");
+
+                            if( covid[i].indexOf("cases") > -1) {
+                                System.out.println(covid[i]);
+                                StrCases = casesc[2];
+
+                             }
+                            else if(covid[i].indexOf("deaths") > -1)
+                            {
+                                StrDeaths = casesc[2];
+
+                            }
+                    }
+
+
+                        cases.setText("Corona Cases:"+StrCases);
+                        deaths.setText(" Deaths:"+StrDeaths);
+
+
+                }catch (JSONException e){
+
+                    e.printStackTrace();
+                }
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                System.out.println(error);
+
+            }
+
+        }
+        )
+
+        {
+
+        };
+        RequestQueue queueCurrentWeather = Volley.newRequestQueue(this);
+        queueCurrentWeather.add(jsonObjectRequest);
+
+        System.out.println(queueCurrentWeather);
+
+
+        jsonObjectRequest.setRetryPolicy(new DefaultRetryPolicy(
+                1000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+    }
+
     // get current weather
     public void getCurrentWeather(){
         // establish Json request
+
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, currentWeatherJsonUrl, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -343,26 +541,61 @@ public class HomeActivity extends AppCompatActivity {
                     // get the first object from  weather array
                     JSONObject object0WeatherArrayJson = weatherArrayJson.getJSONObject(0);
 
+                    JSONObject windArrayJson = response.getJSONObject("wind");
+
+
+
                     // get current weather data
                     city = response.getString("name");
                     String iconURLCurrentWeather = "http://openweathermap.org/img/wn/" + object0WeatherArrayJson.getString("icon") + "@2x.png";
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     tempCurrentWeather = (int)Math.floor(mainObjectJson.getDouble("temp")) + "°C";
+                    tempCurrentWeatherF = (((int)Math.floor(mainObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+                    int windspeed = (int)Math.floor(windArrayJson.getDouble("speed"));
+                    windspeedstr = String.valueOf(windspeed+"m/s");
+
                     currentWeather = object0WeatherArrayJson.getString("main");
+
+                    Log.d("mytag","mm");
+                    Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+
+                    System.out.println("i m curr temp"+temp);
+                    //startActivity(intent);
+
+                    SharedPreferences sharedPref = getSharedPreferences("myKey", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString("value", String.valueOf(temp));
+                    editor.putString("temp",tempCurrentWeather);
+                    editor.putString("city",city);
+                    editor.apply();
 
                     NotificationUtility notificationUtility = new NotificationUtility();
 
                     if (isNotiOn.equals("t"))
                     {
                          //Send Raining Notification
-                         notificationUtility.sendNotification(HomeActivity.this, notificationManagerCompat, currentWeather, user_name, temp);
+                         notificationUtility.sendNotification(HomeActivity.this, notificationManagerCompat, currentWeather, user_name, temp,city);
                     }
 
                     // set current weather data to views
                     tvCityHome.setText(city);
                     Picasso.get().load(iconURLCurrentWeather).into(ivPresentWeatherHome);
-                    tvTemHome.setText(tempCurrentWeather);
+
+                    if(temp_val!=null) {
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTemHome.setText(tempCurrentWeatherF);
+                        }
+
+                        else {
+                            tvTemHome.setText(tempCurrentWeather);
+                        }
+                    }
+                    else
+                    {
+                        tvTemHome.setText(tempCurrentWeather);
+                    }
                     tvPresentWeatherHome.setText(currentWeather);
+                    windspeedtext.setText(windspeedstr);
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -405,11 +638,25 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather0 = (object0ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather0 = "http://openweathermap.org/img/wn/" + object0Weather0ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather0 = (int)Math.floor(main0ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather0F = (((int)Math.floor(main0ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
                     // set first weather data to views
                     tvTime0Home.setText(timeWeather0);
                     Picasso.get().load(iconURLWeather0).into(ivTime0WeatherHome);
-                    tvTime0WeatherHome.setText(tempWeather0);
-
+//                    tvTime0WeatherHome.setText(tempWeather0);
+                    if(temp_val!=null) {
+//                        tvTime0WeatherHome.setText(tempWeather0F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime0WeatherHome.setText(tempWeather0F);
+                        }
+//
+                        else {
+                            tvTime0WeatherHome.setText(tempWeather0);
+                        }
+                    }
+                    else
+                    {
+                        tvTime0WeatherHome.setText(tempWeather0);
+                    }
                     // get the second object from listArrayJson
                     JSONObject object1ListArrayJson = listArrayJson.getJSONObject(1);
                     // get main object from the second object
@@ -422,11 +669,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather1 = (object1ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather1 = "http://openweathermap.org/img/wn/" + object0Weather1ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather1 = (int)Math.floor(main1ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather1F = (((int)Math.floor(main1ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set second weather data to views
                     tvTime1Home.setText(timeWeather1);
                     Picasso.get().load(iconURLWeather1).into(ivTime1WeatherHome);
-                    tvTime1WeatherHome.setText(tempWeather1);
-
+//                    tvTime1WeatherHome.setText(tempWeather1);
+                    if(temp_val!=null) {
+                        tvTime1WeatherHome.setText(tempWeather1F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime1WeatherHome.setText(tempWeather1F);
+                        }
+//
+                        else {
+                            tvTime1WeatherHome.setText(tempWeather1);
+                        }
+                    }
+                    else
+                    {
+                        tvTime1WeatherHome.setText(tempWeather1);
+                    }
                     // get the third object from listArrayJson
                     JSONObject object2ListArrayJson = listArrayJson.getJSONObject(2);
                     // get main object from the second object
@@ -439,11 +701,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather2 = (object2ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather2 = "http://openweathermap.org/img/wn/" + object0Weather2ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather2 = (int)Math.floor(main2ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather2F = (((int)Math.floor(main2ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set third weather data to views
                     tvTime2Home.setText(timeWeather2);
                     Picasso.get().load(iconURLWeather2).into(ivTime2WeatherHome);
-                    tvTime2WeatherHome.setText(tempWeather2);
-
+//                    tvTime2WeatherHome.setText(tempWeather2);
+                    if(temp_val!=null) {
+//                        tvTime2WeatherHome.setText(tempWeather2F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime2WeatherHome.setText(tempWeather2F);
+                        }
+//
+                        else {
+                            tvTime2WeatherHome.setText(tempWeather2);
+                        }
+                    }
+                    else
+                    {
+                        tvTime2WeatherHome.setText(tempWeather2);
+                    }
 
                     // get the fourth object from listArrayJson
                     JSONObject object3ListArrayJson = listArrayJson.getJSONObject(3);
@@ -457,10 +734,26 @@ public class HomeActivity extends AppCompatActivity {
                     String timeWeather3 = (object3ListArrayJson.getString("dt_txt")).substring(11, 16);
                     String iconURLWeather3 = "http://openweathermap.org/img/wn/" + object0Weather3ArrayJson.getString("icon") + "@2x.png";
                     String tempWeather3 = (int)Math.floor(main3ObjectJson.getDouble("temp")) + "°C";
+                    String tempWeather3F = (((int)Math.floor(main3ObjectJson.getDouble("temp"))*9/5+32)) + "°F";
+
                     // set fourth weather data to views
                     tvTime3Home.setText(timeWeather3);
                     Picasso.get().load(iconURLWeather3).into(ivTime3WeatherHome);
-                    tvTime3WeatherHome.setText(tempWeather3);
+//                    tvTime3WeatherHome.setText(tempWeather3);
+                    if(temp_val!=null) {
+//                        tvTime3WeatherHome.setText(tempWeather3F);
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvTime3WeatherHome.setText(tempWeather3F);
+                        }
+//
+                        else {
+                            tvTime3WeatherHome.setText(tempWeather3);
+                        }
+                    }
+                    else
+                    {
+                        tvTime3WeatherHome.setText(tempWeather3);
+                    }
 
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -572,6 +865,8 @@ public class HomeActivity extends AppCompatActivity {
                         if(dateObject.equals(dateDay1)){
                             double tempMin = Double.parseDouble(mainObjectJson.getString("temp_min"));
                             double tempMax = Double.parseDouble(mainObjectJson.getString("temp_max"));
+//                            double tempMinf = Double.parseDouble(mainObjectJson.getString("temp_min"));
+//                            double tempMaxf = Double.parseDouble(mainObjectJson.getString("temp_max"));
                             tempMinArrayDay1.add(tempMin);
                             tempMaxArrayDay1.add(tempMax);
 
@@ -643,32 +938,104 @@ public class HomeActivity extends AppCompatActivity {
                     // set day1 data to views
                     tvDay1Home.setText(day1);
                     Picasso.get().load(iconURLWeatherDay1).into(ivDay1Weather);
-                    tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
-                    tvDay1LowTemHome.setText(tempMinDay1 + "°C");
 
+                    if(temp_val!=null) {
+
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay1HighTemHome.setText(tempMaxDay1*9/5+32 + "°F");
+                            tvDay1LowTemHome.setText(tempMinDay1*9/5+32 + "°F");                        }
+//
+                        else {
+                            tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
+                            tvDay1LowTemHome.setText(tempMinDay1 + "°C");                        }}
+                    else
+                    {
+                        tvDay1HighTemHome.setText(tempMaxDay1 + "°C");
+                        tvDay1LowTemHome.setText(tempMinDay1 + "°C");
+                    }
                     // set day2 data to views
                     tvDay2Home.setText(day2);
                     Picasso.get().load(iconURLWeatherDay2).into(ivDay2Weather);
-                    tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
-                    tvDay2LowTemHome.setText(tempMinDay2 + "°C");
 
+                    if(temp_val!=null) {
+
+
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay2HighTemHome.setText(tempMaxDay2*9/5+32 + "°F");
+                            tvDay2LowTemHome.setText(tempMinDay2*9/5+32 + "°F");                    }
+//
+                        else {
+                            tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+                            tvDay2LowTemHome.setText(tempMinDay2 + "°C");                    }}
+
+                    else
+                    {
+                        tvDay2HighTemHome.setText(tempMaxDay2 + "°C");
+                        tvDay2LowTemHome.setText(tempMinDay2 + "°C");
+                    }
                     // set day3 data to views
                     tvDay3Home.setText(day3);
                     Picasso.get().load(iconURLWeatherDay3).into(ivDay3Weather);
-                    tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
-                    tvDay3LowTemHome.setText(tempMinDay3 + "°C");
 
+                    if(temp_val!=null) {
+
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay3HighTemHome.setText(tempMaxDay3*9/5+32 + "°F");
+                            tvDay3LowTemHome.setText(tempMinDay3*9/5+32 + "°F");                   }
+//
+                        else {
+                            tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+                            tvDay3LowTemHome.setText(tempMinDay3 + "°C");             }
+
+                    }
+                    else
+                    {
+                        tvDay3HighTemHome.setText(tempMaxDay3 + "°C");
+                        tvDay3HighTemHome.setText(tempMinDay3 + "°C");
+                    }
                     // set day4 data to views
                     tvDay4Home.setText(day4);
                     Picasso.get().load(iconURLWeatherDay4).into(ivDay4Weather);
-                    tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
-                    tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+
+                    if(temp_val!=null) {
+
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay4HighTemHome.setText(tempMaxDay4*9/5+32 + "°F");
+                            tvDay4LowTemHome.setText(tempMinDay4*9/5+32 + "°F");                }
+//
+                        else {
+                            tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+                            tvDay4LowTemHome.setText(tempMinDay4 + "°C");             }
+                    }
+                    else
+                    {
+                        tvDay4HighTemHome.setText(tempMaxDay4 + "°C");
+                        tvDay4LowTemHome.setText(tempMinDay4 + "°C");
+                    }
 
                     // set day5 data to views
                     tvDay5Home.setText(day5);
                     Picasso.get().load(iconURLWeatherDay5).into(ivDay5Weather);
-                    tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
-                    tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+
+                    if(temp_val!=null) {
+
+                        if(temp_val.equalsIgnoreCase("F")) {
+                            tvDay5HighTemHome.setText(tempMaxDay5*9/5+32 + "°F");
+                            tvDay5LowTemHome.setText(tempMinDay5*9/5+32 + "°F");
+
+                        }
+
+                        else {
+                            tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+                            tvDay5LowTemHome.setText(tempMinDay5 + "°C");           }
+
+
+                    }
+                    else
+                    {
+                        tvDay5HighTemHome.setText(tempMaxDay5 + "°C");
+                        tvDay5LowTemHome.setText(tempMinDay5 + "°C");
+                    }
 
 
                 }catch (JSONException e){

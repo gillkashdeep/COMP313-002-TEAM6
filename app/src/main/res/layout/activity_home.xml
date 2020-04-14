@@ -11,16 +11,48 @@
         android:id="@+id/tbHome"
         layout="@layout/toolbar" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/account" />
+        android:layout_gravity="center"
+        android:weightSum="2">
+
+        <TextView
+            android:id="@+id/Cases"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+            />
+
+        <TextView
+            android:id="@+id/Deaths"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvCityHome"
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:text="Toronto"
+            android:textAlignment="center"
+            android:textSize="36sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvDateHome"
@@ -31,19 +63,10 @@
             android:text="Oct 20 | Sun"
             android:textAlignment="center" />
 
-        <TextView
-            android:id="@+id/tvCityHome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Toronto"
-            android:textAlignment="center"
-            android:textSize="36sp"
-            android:textStyle="bold" />
-
         <ImageView
             android:id="@+id/ivPresentWeatherHome"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="118dp"
+            android:layout_height="67dp"
             android:layout_marginStart="140dp"
             android:src="@drawable/icon_testweather" />
 
@@ -54,11 +77,19 @@
 
             <TextView
                 android:id="@+id/tvTemHome"
-                android:layout_width="wrap_content"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_weight="1"
                 android:text="11°C"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/windSpeed_text"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -83,6 +114,11 @@
         android:layout_height="20dp"
         android:text="───────────────────────────────────────────"
         android:textAlignment="center" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -243,17 +279,17 @@
                 android:id="@+id/tvDay1HighTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="14°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvDay1LowTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="13°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
         </LinearLayout>
 
@@ -281,17 +317,17 @@
                 android:id="@+id/tvDay2HighTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="16°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvDay2LowTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="8°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
         </LinearLayout>
 
@@ -319,17 +355,17 @@
                 android:id="@+id/tvDay3HighTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="14°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvDay3LowTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="13°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
         </LinearLayout>
 
@@ -357,17 +393,17 @@
                 android:id="@+id/tvDay4HighTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="16°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvDay4LowTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="8°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
         </LinearLayout>
 
@@ -395,17 +431,17 @@
                 android:id="@+id/tvDay5HighTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="14°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/tvDay5LowTemHome"
                 android:layout_width="102dp"
                 android:layout_height="32dp"
+                android:layout_marginTop="6dp"
                 android:text="13°C"
-                android:textAlignment="center"
-                android:layout_marginTop="6dp"/>
+                android:textAlignment="center" />
 
         </LinearLayout>
 
