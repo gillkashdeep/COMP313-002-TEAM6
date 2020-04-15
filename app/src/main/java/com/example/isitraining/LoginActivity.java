@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -19,75 +20,38 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
-    public static Bundle mMyAppsBundle = new Bundle();
+
+    Button btnLogin;
+    EditText edtUsername;
+    EditText edtPassword;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText userName = findViewById(R.id.txtUser);
-        final EditText passWord = findViewById(R.id.txtPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        edtUsername = (EditText) findViewById(R.id.txtUser);
+        edtPassword = (EditText) findViewById(R.id.txtPassword);
 
-
-
-        final Button bLogin = findViewById(R.id.btnLogin);
-
-        bLogin.setOnClickListener(new View.OnClickListener() {
+        databaseHelper = new DatabaseHelper(LoginActivity.this);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                final String user_name = userName.getText().toString();
-                LoginActivity.mMyAppsBundle.putString("1", user_name);
-                final String user_password = passWord.getText().toString();
-                LoginActivity.mMyAppsBundle.putString("2", user_password);
-                System.out.print("database reach!");
+            public void onClick(View v) {
+                boolean isExist = databaseHelper.checkUserExist(edtUsername.getText().toString(), edtPassword.getText().toString());
 
-
-                Response.Listener<String> responseListener = new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
-
-                            if(success)
-                            {
-                                String user_name = jsonResponse.getString("user_name");
-
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                intent.putExtra("user_name", user_name);
-
-                                LoginActivity.this.startActivity(intent);
-                            }
-                            else
-                            {
-                                AlertDialog.Builder regFail = new AlertDialog.Builder(LoginActivity.this);
-                                regFail.setMessage("Login Failed")
-                                        .setNegativeButton("Retry", null)
-                                        .create()
-                                        .show();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                };
-
-                LoginRequest loginRequest = new LoginRequest(user_name, user_password, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);
+                if(isExist){
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.putExtra("username", edtUsername.getText().toString());
+                    startActivity(intent);
+                } else {
+                    edtPassword.setText(null);
+                    Toast.makeText(LoginActivity.this, "Login failed. Invalid username or password.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
-
-        // set toolbar title
-        Toolbar tbLogin = findViewById(R.id.tbLogin);
-        setSupportActionBar(tbLogin);
-        getSupportActionBar().setTitle("Login");
     }
-
     public void goToRegisterPage(View view){
         Intent intentRegister = new Intent(this,RegisterActivity.class);
         startActivity(intentRegister);

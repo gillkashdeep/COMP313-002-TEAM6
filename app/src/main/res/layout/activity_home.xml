@@ -11,17 +11,34 @@
         android:id="@+id/tbHome"
         layout="@layout/toolbar" />
 
-    <TextView
-        android:id="@+id/Cases"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="350px"/>
+        android:layout_gravity="center"
+        android:weightSum="2">
 
-    <TextView
-        android:id="@+id/Deaths"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="350px"/>
+        <TextView
+            android:id="@+id/Cases"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+
+            />
+
+        <TextView
+            android:id="@+id/Deaths"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            />
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -73,7 +73,8 @@ tools:context=".SettingActivity">
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="20dp"
-            android:text="Save Changes" />
+            android:text="Save Changes"
+            android:background="#93C7FF" />
 
         <Button
             android:id="@+id/btnlangChanges"
@@ -81,6 +82,7 @@ tools:context=".SettingActivity">
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="10dp"
+            android:background="#93C7FF"
             android:layout_marginRight="20dp"
             android:text="Change Language" />
 

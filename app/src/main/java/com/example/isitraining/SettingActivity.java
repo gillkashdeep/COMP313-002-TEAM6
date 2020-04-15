@@ -1,7 +1,9 @@
 package com.example.isitraining;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NavUtils;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
@@ -41,7 +43,8 @@ public class SettingActivity extends AppCompatActivity {
         // set toolbar title
         Toolbar tbSet = findViewById(R.id.tbSet);
         setSupportActionBar(tbSet);
-        getSupportActionBar().setTitle("Setting");
+        getSupportActionBar().setTitle("Settings");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         switchNotification = findViewById(R.id.switchNotification);
         radioGroup = findViewById(R.id.GrpCtoF);

@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".NotificationChannelSetup"
@@ -24,9 +25,9 @@
         <activity android:name=".AdminAccountActivity" />
         <activity android:name=".AccountActivity" />
         <activity android:name=".SettingActivityAfterLogin" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".SettingActivity" />
+        <activity android:name=".RegisterActivity" android:parentActivityName=".LoginActivity"/>
+        <activity android:name=".LoginActivity" android:parentActivityName=".HomeActivity"/>
+        <activity android:name=".SettingActivity" android:parentActivityName=".HomeActivity"/>
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

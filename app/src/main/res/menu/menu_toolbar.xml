@@ -4,19 +4,23 @@
 
     <item
         android:id="@+id/add"
-        android:icon="@drawable/add_icon_s"
+        android:icon="@android:drawable/ic_menu_add"
         android:title="share"
         app:showAsAction="always" />
     <item
         android:id="@+id/share"
-        android:icon="@drawable/share_logo"
+        android:icon="@android:drawable/ic_menu_share"
         android:title="share"
         app:showAsAction="always" />
     <item
         android:id="@+id/goToSetting"
-        android:title="Go to Setting Page"
-        android:icon="@drawable/settings"
+        android:title="Settings"
         app:showAsAction="ifRoom"/>
 
+
+    <item
+        android:id="@+id/goToLogin"
+        android:title="Login/Sign Up"
+        app:showAsAction="ifRoom"/>
 
 </menu>

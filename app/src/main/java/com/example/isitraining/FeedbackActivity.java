@@ -20,7 +20,7 @@ import org.json.JSONObject;
 
 public class FeedbackActivity extends AppCompatActivity {
 
-    @Override
+   /* @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedback);
@@ -78,7 +78,7 @@ public class FeedbackActivity extends AppCompatActivity {
         Toolbar tbFeedback = findViewById(R.id.tbFeedback);
         setSupportActionBar(tbFeedback);
         getSupportActionBar().setTitle("Send Your Feedback");
-    }
+    }*/
 
     void Delivered ()
     {

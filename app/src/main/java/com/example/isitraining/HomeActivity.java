@@ -109,25 +109,6 @@ public class HomeActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
-        try
-        {
-            String user_name = intent.getStringExtra("user_name");
-            //Toast Hello
-            if (user_name == null)
-            {
-                Toast.makeText(this,  "Welcome Guest",
-                        Toast.LENGTH_LONG).show();
-            }
-            else
-            {
-                Toast.makeText(this,  "Welcome Back " + user_name,
-                        Toast.LENGTH_LONG).show();
-            }
-        }
-        catch (NullPointerException e)
-        {
-            e.printStackTrace();
-        }
 
          cases = findViewById(R.id.Cases);
          deaths = findViewById(R.id.Deaths);
@@ -264,7 +245,11 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.add:
                 addSchedule();
                 break;
-            case R.id.goToSettingAfterLogin:
+            case R.id.goToLogin:
+                Intent intentLog = new Intent(this,LoginActivity.class);
+                startActivityForResult(intentLog, 1);
+                break;
+
             case R.id.goToSettingAfterLogin_Admin:
                 Intent intentSetAfterLogin = new Intent(this,SettingActivityAfterLogin.class);
                 startActivityForResult(intentSetAfterLogin, 2);
