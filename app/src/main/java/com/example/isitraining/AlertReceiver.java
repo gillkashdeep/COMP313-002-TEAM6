@@ -62,10 +62,12 @@ public class AlertReceiver extends BroadcastReceiver {
                     int temp = (int)Math.floor(mainObjectJson.getDouble("temp"));
                     String currentWeather = object0WeatherArrayJson.getString("main");
 
+                    String city = response.getString("name");
+
                     NotificationUtility notificationUtility = new NotificationUtility();
 
                     //Send Raining Notification
-                    notificationUtility.sendNotification(context, notificationManagerCompat, currentWeather, user_name, temp);
+                    notificationUtility.sendNotification(context, notificationManagerCompat, currentWeather, user_name, temp,city);
 
                 }catch (JSONException e){
                     e.printStackTrace();

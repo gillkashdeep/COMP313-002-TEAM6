@@ -23,7 +23,7 @@ import org.json.JSONObject;
 
 public class AccountActivity extends AppCompatActivity {
 
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account);
@@ -169,7 +169,7 @@ public class AccountActivity extends AppCompatActivity {
         Toolbar tbAccount = findViewById(R.id.tbAccount);
         setSupportActionBar(tbAccount);
         getSupportActionBar().setTitle("Update User Information");
-    }
+    }*/
 
     public void goToFeedbackPage(View view){
         Intent intentFeedback = new Intent(this,FeedbackActivity.class);

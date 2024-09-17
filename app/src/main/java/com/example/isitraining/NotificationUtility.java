@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.StrictMode;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -24,7 +25,7 @@ import static com.example.isitraining.NotificationChannelSetup.CHANNEL_1_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_2_ID;
 import static com.example.isitraining.NotificationChannelSetup.CHANNEL_3_ID;
 
-public class NotificationUtility {
+public class NotificationUtility extends AppCompatActivity {
 
     private static final String Warning_Request_URL = "https://isitraining.000webhostapp.com/Retrive_Warnings.php";
     InputStream is;
@@ -32,21 +33,20 @@ public class NotificationUtility {
     String result;
 
     //declaration of notification  variables
-//    public NotificationManagerCompat notificationManagerCompat;
 
-    public void sendNotification(Context context, NotificationManagerCompat notificationManagerCompat, String currentWeather, String user_name, int temp){
+    public void sendNotification(Context context, NotificationManagerCompat notificationManagerCompat, String currentWeather, String user_name, int temp, String city){
         //Send Raining Notification
         if (currentWeather.equals("Rain"))
         {
-            sendRainNotification(context, notificationManagerCompat);
+            sendRainNotification(context, notificationManagerCompat,temp,city);
         }
         else if (currentWeather.equals("Snow"))
         {
-            sendSnowNotification(context, notificationManagerCompat);
+            sendSnowNotification(context, notificationManagerCompat,temp,city);
         }
         else
         {
-            sendAllClearNotification(context, notificationManagerCompat);
+            sendAllClearNotification(context, notificationManagerCompat,temp,city);
         }
 
 
@@ -76,10 +76,10 @@ public class NotificationUtility {
         }
     }
 
-    public void sendRainNotification(Context context, NotificationManagerCompat notificationManagerCompat)
+    public void sendRainNotification(Context context, NotificationManagerCompat notificationManagerCompat,int temp, String city)
     {
         String rainTitle = "Hey I Think it is Raining!";
-        String rainMessage = "It's Raining! You Should Bring a Umbrella!";
+        String rainMessage = "It's Raining! You Should Bring a Umbrella!"+"\n Temp:"+temp+"City:"+city;
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_weather_update)
@@ -95,10 +95,10 @@ public class NotificationUtility {
         }
     }
 
-    public void sendSnowNotification(Context context, NotificationManagerCompat notificationManagerCompat)
+    public void sendSnowNotification(Context context, NotificationManagerCompat notificationManagerCompat,int temp, String city)
     {
         String rainTitle = "Hey I Think it is Snowing!";
-        String rainMessage = "It's Snowing! You Should Bring be Careful out There!";
+        String rainMessage = "It's Snowing! You Should Bring be Careful out There!"+"\n Temp:"+temp+"\n City"+city;
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_weather_update)
@@ -160,15 +160,19 @@ public class NotificationUtility {
         }
     }
 
-    public void sendAllClearNotification(Context context, NotificationManagerCompat notificationManagerCompat)
+    public void sendAllClearNotification(Context context, NotificationManagerCompat notificationManagerCompat, int temp,String  city)
     {
+
+
         String clearTitle = "Hey It Looks Great Outside!";
-        String clearMessage = "It All Clear Outside! Go Out and Have Some Fun!";
+        String clearMessage = "It All Clear Outside! STAY HOME SAFE!" +"\n Temp:"+temp+",City:"+city;
+
 
         Notification notification = new NotificationCompat.Builder(context, CHANNEL_1_ID)
                 .setSmallIcon(R.drawable.ic_weather_update)
                 .setContentTitle(clearTitle)
                 .setContentText(clearMessage)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(clearMessage))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .build();
